@@ -36,12 +36,10 @@ static int cmd_q(char *args) {
   return -1;
 }
 
-static int cmd_si(char *args)
-{
+static int cmd_si(char *args) {
   if(args == NULL)
     exec_wrapper(1);
-  else
-  {
+  else {
     char *argnum = strtok(args," ");
     int cmdnum = atoi(argnum);
     for(int i = 0; i < cmdnum; i++)
@@ -50,6 +48,27 @@ static int cmd_si(char *args)
   return 0;
 }
 
+
+static int cmd_info(char *args) {
+  if(args == NULL) {
+    printf("info instruction need an argument, r for register, w for watchpoint\n");
+  }
+  else {
+    char *arg = strtok(args," ");
+    if(strcmp(arg,"r")) {
+      for(int i = R_EAX; i <= R_EDI; i++) {
+        printf("%s:0x%x\n",regsl[i],cpu.gpr[i]._32);
+      }
+    }
+    else if(strcmp(arg,"w")) {
+      printf("功能待完善\n");
+    }
+    else {
+      printf("Error:the argument should be w or r\n");
+    }
+  } 
+  return 0;
+}
 
 static int cmd_help(char *args);
 
@@ -62,6 +81,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
+  { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
   /* TODO: Add more commands */
 
 };
