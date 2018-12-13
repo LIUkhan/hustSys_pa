@@ -41,9 +41,14 @@ static int cmd_si(char *args) {
     exec_wrapper(1);
   else {
     char *argnum = strtok(args," ");
-    int cmdnum = atoi(argnum);
-    for(int i = 0; i < cmdnum; i++)
-      exec_wrapper(1);
+    char *test = strtok(args," ");//检查有无多余参数
+    if(test == NULL) {
+      int cmdnum = atoi(argnum);
+      for(int i = 0; i < cmdnum; i++)
+        exec_wrapper(1);
+    }
+    else
+      printf("Error:too many arguments\n");
   }
   return 0;
 }
@@ -51,24 +56,57 @@ static int cmd_si(char *args) {
 
 static int cmd_info(char *args) {
   if(args == NULL) {
-    printf("info instruction need an argument, r for register, w for watchpoint\n");
+    printf("Error:info instruction need an argument, r for register, w for watchpoint\n");
   }
   else {
     char *arg = strtok(args," ");
-    if(!strcmp(arg,"r")) {
-      for(int i = R_EAX; i <= R_EDI; i++) {
-        printf("%s:0x%x\n",regsl[i],cpu.gpr[i]._32);
+    char *test = strtok(args," ");//检查有无多余参数
+    if(test == NULL)
+    {
+      if(!strcmp(arg,"r")) {
+        for(int i = R_EAX; i <= R_EDI; i++) {
+          printf("%s:0x%80x\n",regsl[i],cpu.gpr[i]._32);
+        }
+      }
+      else if(!strcmp(arg,"w")) {
+        printf("功能待完善\n");
+      }
+      else {
+        printf("Error:the argument should be w or r\n");
       }
     }
-    else if(!strcmp(arg,"w")) {
-      printf("功能待完善\n");
-    }
-    else {
-      printf("Error:the argument should be w or r\n");
-    }
+    else
+      printf("Error:too many arguments\n");
   } 
   return 0;
 }
+
+static int cmd_x(char *args) {
+  if(args == NULL) {
+    printf("Error: Instruction Format: x N EXPR,use help to learn more\n");
+  }
+  else {
+    char *arg1 = strtok(args," ");
+    char *arg2 = strtok(args," ");
+    char *test = strtok(args," ");//检查有无多余参数
+    if(test == NULL)
+    {
+      int n = atoi(arg1);
+      uint32_t addr;
+      sscanf(arg2,"%x",&addr);
+      printf("%x\n",addr);
+      for(int i = 0; i < n; i++)
+      {
+        printf("0x%80x\n",paddr_read(addr,4));
+        addr += 32;
+      }
+    }
+    else
+      printf("Error:too many arguments\n");
+  }
+  return 0;
+}
+
 
 static int cmd_help(char *args);
 
@@ -82,6 +120,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
   { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
+  { "x","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
   /* TODO: Add more commands */
 
 };
