@@ -89,7 +89,6 @@ static int cmd_x(char *args) {
     char *arg1 = strtok(args," ");
     char *arg2 = strtok(NULL," ");
     char *test = strtok(NULL," ");//检查有无多余参数
-    printf("%s %s %s\n",arg1,arg2,test);
     if(test == NULL)
     {
       int n = atoi(arg1);
