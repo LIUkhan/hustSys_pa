@@ -61,6 +61,7 @@ static int cmd_info(char *args) {
   else {
     char *arg = strtok(args," ");
     char *test = strtok(args," ");//检查有无多余参数
+    printf("%s\n%s\n",arg,test);
     if(test == NULL)
     {
       if(!strcmp(arg,"r")) {
