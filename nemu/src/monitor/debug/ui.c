@@ -8,7 +8,7 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
-
+void exec_wrapper(bool);
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -36,6 +36,21 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args)
+{
+  if(args == NULL)
+    exec_wrapper(1);
+  else
+  {
+    char *argnum = strtok(args," ");
+    int cmdnum = atoi(argnum);
+    for(int i = 0; i < cmdnum; i++)
+      exec_wrapper(1);
+  }
+  return 0;
+}
+
+
 static int cmd_help(char *args);
 
 static struct {
@@ -46,7 +61,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si [N]","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
   /* TODO: Add more commands */
 
 };
@@ -101,7 +116,7 @@ void ui_mainloop(int is_batch_mode) {
     extern void sdl_clear_event_queue(void);
     sdl_clear_event_queue();
 #endif
-
+    //在命令池里面比较是哪个命令,所有命令函数返回int，为了进行if的判断
     int i;
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
