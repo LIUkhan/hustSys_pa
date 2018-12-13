@@ -32,6 +32,14 @@ typedef struct {
   //   rtlreg_t eax;
   //   gpr[0];
   // };
+  // rtlreg_t &eax = gpr[0];
+  // rtlreg_t &ecx = gpr[1];
+  // rtlreg_t &edx = gpr[2];
+  // rtlreg_t &ebx = gpr[3];
+  // rtlreg_t &esp = gpr[4];
+  // rtlreg_t &ebp = gpr[5];
+  // rtlreg_t &esi = gpr[6];
+  // rtlreg_t &edi = gpr[7];
   rtlreg_t eax,ecx, edx, ebx, esp, ebp, esi, edi;
 
   vaddr_t eip;
