@@ -41,7 +41,7 @@ static int cmd_si(char *args) {
     exec_wrapper(1);
   else {
     char *argnum = strtok(args," ");
-    char *test = strtok(args," ");//检查有无多余参数
+    char *test = strtok(NULL," ");//检查有无多余参数
     if(test == NULL) {
       int cmdnum = atoi(argnum);
       for(int i = 0; i < cmdnum; i++)
@@ -60,7 +60,7 @@ static int cmd_info(char *args) {
   }
   else {
     char *arg = strtok(args," ");
-    char *test = strtok(args," ");//检查有无多余参数
+    char *test = strtok(NULL," ");//检查有无多余参数
     printf("%s\n%s\n",arg,test);
     if(test == NULL)
     {
@@ -89,7 +89,7 @@ static int cmd_x(char *args) {
   else {
     char *arg1 = strtok(args," ");
     char *arg2 = strtok(args," ");
-    char *test = strtok(args," ");//检查有无多余参数
+    char *test = strtok(NULL," ");//检查有无多余参数
     if(test == NULL)
     {
       int n = atoi(arg1);
