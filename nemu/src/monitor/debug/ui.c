@@ -65,7 +65,7 @@ static int cmd_info(char *args) {
     {
       if(!strcmp(arg,"r")) {
         for(int i = R_EAX; i <= R_EDI; i++) {
-          printf("%s:0x%80x\n",regsl[i],cpu.gpr[i]._32);
+          printf("%s:0x%08x\n",regsl[i],cpu.gpr[i]._32);
         }
       }
       else if(!strcmp(arg,"w")) {
@@ -97,7 +97,7 @@ static int cmd_x(char *args) {
       printf("%x\n",addr);
       for(int i = 0; i < n; i++)
       {
-        printf("0x%80x\n",paddr_read(addr,4));
+        printf("0x%08x\n",paddr_read(addr,4));
         addr += 32;
       }
     }
