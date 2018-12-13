@@ -61,7 +61,6 @@ static int cmd_info(char *args) {
   else {
     char *arg = strtok(args," ");
     char *test = strtok(NULL," ");//检查有无多余参数
-    printf("%s\n%s\n",arg,test);
     if(test == NULL)
     {
       if(!strcmp(arg,"r")) {
@@ -88,8 +87,9 @@ static int cmd_x(char *args) {
   }
   else {
     char *arg1 = strtok(args," ");
-    char *arg2 = strtok(args," ");
+    char *arg2 = strtok(NULL," ");
     char *test = strtok(NULL," ");//检查有无多余参数
+    printf("%s %s %s\n",arg1,arg2,test);
     if(test == NULL)
     {
       int n = atoi(arg1);
