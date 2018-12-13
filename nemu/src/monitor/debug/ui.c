@@ -55,12 +55,12 @@ static int cmd_info(char *args) {
   }
   else {
     char *arg = strtok(args," ");
-    if(strcmp(arg,"r")) {
+    if(!strcmp(arg,"r")) {
       for(int i = R_EAX; i <= R_EDI; i++) {
         printf("%s:0x%x\n",regsl[i],cpu.gpr[i]._32);
       }
     }
-    else if(strcmp(arg,"w")) {
+    else if(!strcmp(arg,"w")) {
       printf("功能待完善\n");
     }
     else {
