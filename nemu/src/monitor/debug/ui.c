@@ -61,7 +61,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-  { "si [N]","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
+  { "si","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
   /* TODO: Add more commands */
 
 };
@@ -125,6 +125,6 @@ void ui_mainloop(int is_batch_mode) {
       }
     }
 
-    if (i == NR_CMD) { printf("Unknown command '%s'%ld\n", cmd,NR_CMD); }
+    if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
   }
 }
