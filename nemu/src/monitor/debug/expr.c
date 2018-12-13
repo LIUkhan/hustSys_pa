@@ -7,7 +7,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256, /*TK_HNUM, TK_ONUM, TK_REG，TK_LB, TK_RB, */TK_EQ
 
   /* TODO: Add more token types */
 
@@ -21,10 +21,18 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
-  {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {" +", TK_NOTYPE},    // spaces' '
+  // {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+", TK_HNUM}, //16进制数
+	// {"[0-9]+", TK_ONUM},  //10进制数
+  // {"\\$[a-z]+", TK_REG},//没有限制字母数字，不做判断，由软件判断
+  
+  // {"\\(",TK_LB},        //LEFT BRACKET
+  // {"\\)",TK_RB},        //RIGHT BRACKET
+  // {"\\/", '/'},         // divide '/'
+  // {"\\*", '*'},         // multiply '*'
+  // {"\\-", '-'},         // minus '-'
+  {"\\+", '+'},         // plus '+'
+  {"==", TK_EQ}         // equal '='
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -55,11 +63,11 @@ typedef struct token {
 
 Token tokens[32];
 int nr_token;
-
+//正则表达式一条一条试
 static bool make_token(char *e) {
   int position = 0;
   int i;
-  regmatch_t pmatch;
+  regmatch_t pmatch;//分为开始和结束 start and end of match 
 
   nr_token = 0;
 

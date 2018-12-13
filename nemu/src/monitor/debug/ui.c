@@ -98,7 +98,7 @@ static int cmd_x(char *args) {
       for(int i = 0; i < n; i++)
       {
         printf("0x%08x\n",paddr_read(addr,4));
-        addr += 4;
+        addr += 4;//addr加1，移动一个字节,0xXXXXXXXX中高位对应高地址
       }
     }
     else
