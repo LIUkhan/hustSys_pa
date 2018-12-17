@@ -181,7 +181,6 @@ uint32_t expr(char *e, bool *success) {
   // TODO();
   valid = true;
   uint32_t ret = eval(0,nr_token-1);
-  printf("%u\n",ret);
   if(ret == 0 && valid == false)
     *success = false;
   else
