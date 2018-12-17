@@ -257,6 +257,10 @@ uint32_t eval(uint32_t p,uint32_t q)
 //检查满足BNF的括号表达式
 bool check_parentheses(uint32_t p,uint32_t q)
 {
+  while(tokens[p].type == TK_NOTYPE)
+    p++;
+  while(tokens[q].type == TK_NOTYPE)
+    q--;
   //不符合BNF的要求
   if(tokens[p].type != TK_LP || tokens[q].type != TK_RP)
     return false;
