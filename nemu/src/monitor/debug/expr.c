@@ -246,7 +246,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-    // printf(" %u %c\n",op,tokens[op].type);
+    printf(" %u %c\n",op,tokens[op].type);
     int val1 = eval(p,op-1);
     int val2 = eval(op+1,q);
 
