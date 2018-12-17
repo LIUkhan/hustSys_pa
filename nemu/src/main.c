@@ -1,5 +1,10 @@
 #include "nemu.h"
+#include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <assert.h>
+#include <string.h>
 
 int init_monitor(int, char *[]);
 void ui_mainloop(int);
