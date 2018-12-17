@@ -176,12 +176,12 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  printf("111\n");
   // token已经分离出来在tokens数组了，现在要对他们进行解析,自上而下的拆解`
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
   valid = true;
   uint32_t ret = eval(0,nr_token-1);
+  printf("%u\n",ret);
   if(ret == 0 && valid == false)
     *success = false;
   else
