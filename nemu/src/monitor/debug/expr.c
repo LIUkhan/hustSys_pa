@@ -10,7 +10,7 @@ bool check_parentheses(uint32_t,uint32_t);
 uint32_t findmainop(uint32_t,uint32_t);
 bool checklegal(uint32_t,uint32_t);
 enum {
-  TK_NOTYPE = 256, TK_LB, TK_RB, TK_HNUM, TK_ONUM, TK_REG，TK_EQ
+  TK_NOTYPE = 256, TK_LP, TK_RP, TK_HNUM, TK_ONUM, TK_REG, TK_EQ
 
   /* TODO: Add more token types */
 
@@ -27,8 +27,8 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces' '
   {"\\(",TK_LP},        //LEFT PARENTHESIS
   {"\\)",TK_RP},        //RIGHT PARENTHESIS
-  {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+", TK_HNUM}, //16进制数
-	{"[0-9]+", TK_ONUM},  //10进制数
+  {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+u", TK_HNUM}, //16进制数
+	{"[0-9]+u", TK_ONUM},  //10进制数
   {"\\$[a-z]+", TK_REG},//没有限制字母数字，不做判断，由软件判断
   
   
@@ -99,54 +99,54 @@ static bool make_token(char *e) {
           default: {
             break;
           }
-          TK_NOTYPE: {
+          case TK_NOTYPE: {
             tokens[nr_token++].type = TK_NOTYPE;
             break;
           }
-          TK_LP: {
+          case TK_LP: {
             tokens[nr_token++].type = TK_LP;
             break;
           }
-          TK_RP:{
+          case TK_RP:{
             tokens[nr_token++].type = TK_RP;
             break;
           }
-          TK_HNUM:{
+          case TK_HNUM:{
             tokens[nr_token].type = TK_HNUM;
             strncpy(tokens[nr_token++].str,substr_start,substr_len);
             if(substr_len > 31)
               assert(0);
             break;
           }
-          TK_ONUM:{
+          case TK_ONUM:{
             tokens[nr_token].type = TK_ONUM;
             strncpy(tokens[nr_token++].str,substr_start,substr_len);
             if(substr_len > 31)
               assert(0);
             break;
           }
-          TK_REG:{
+          case TK_REG:{
             tokens[nr_token].type = TK_REG;
             strncpy(tokens[nr_token++].str,substr_start,substr_len);
             break;
           }
-          TK_EQ:{
+          case TK_EQ:{
             tokens[nr_token++].type = TK_EQ;
             break;
           }
-          '+':{
+          case '+':{
             tokens[nr_token++].type = '+';
             break;
           }
-          '-':{
+          case '-':{
             tokens[nr_token++].type = '-';
             break;
           }
-          '*':{
+          case '*':{
             tokens[nr_token++].type = '*';
             break;
           }
-          '/':{
+          case '/':{
             tokens[nr_token++].type = '/';
             break;
           }
@@ -191,7 +191,7 @@ uint32_t eval(uint32_t p,uint32_t q)
   else if(p == q) { //num hex or oct or err
     int val;
     if(tokens[p].type == TK_HNUM) {
-      if(tokens[p].str[1] = 'X')
+      if(tokens[p].str[1] == 'X')
         sscanf(tokens[p].str,"0X%x",&val);
       else
         sscanf(tokens[p].str,"0x%x",&val);
@@ -218,8 +218,8 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-    val1 = eval(p,op-1);
-    val2 = eval(op+1,q);
+    int val1 = eval(p,op-1);
+    int val2 = eval(op+1,q);
 
     switch(tokens[op].type)
     {
