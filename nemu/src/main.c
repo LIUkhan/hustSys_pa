@@ -9,13 +9,9 @@ struct{
 extern uint32_t expr(char *, bool *);
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
-  // int is_batch_mode = init_monitor(argc, argv);
-
-  /* Receive commands from user. */
-  // ui_mainloop(is_batch_mode);
-  printf("hello\n");
+  int is_batch_mode = init_monitor(argc, argv);
   bool success;
-  FILE *fp = fopen("~/ics2018/nemu/src/testinput", "r");
+  FILE *fp = fopen("testinput", "r");
   if(fp == NULL)
     printf("1\n");
   else
@@ -30,5 +26,7 @@ int main(int argc, char *argv[]) {
     }
     printf("%u  %u\n",expr(test[i].buf,&success),test[i].result);
   }
+  /* Receive commands from user. */
+  ui_mainloop(is_batch_mode);
   return 0;
 }
