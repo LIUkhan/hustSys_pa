@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);
+  printf("hello\n");
   bool success;
   FILE *fp = fopen("../tools/gen-expr/input", "r");
   for(int i = 0; i < 100; i++)
