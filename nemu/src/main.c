@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
   // ui_mainloop(is_batch_mode);
   printf("hello\n");
   bool success;
-  FILE *fp = fopen("testinput", "r");
+  FILE *fp = fopen("~/ics2018/nemu/src/testinput", "r");
   if(fp == NULL)
     printf("1\n");
   else
