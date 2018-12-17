@@ -203,7 +203,7 @@ void removespace(uint32_t *p,uint32_t *q)
 uint32_t eval(uint32_t p,uint32_t q)
 {
   printf("enter\n");
-  removespace(&p,&q);
+  removespace(&p,&q);//避免p == q的情况漏掉排到p>q了（数字加空格)
   if(valid == false)
     return 0;
   if(p > q) {
@@ -232,9 +232,8 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
   }
-  else if(check_parentheses(p,q) == true) {
+  else if(check_parentheses(p,q) == true && checklegal(p+1,q-1) != false) { //没有第二个((87u))+(89u)就会出错
     printf("3");
-    removespace(&p,&q);
     return eval(p+1,q-1);
   }
   else {
@@ -268,7 +267,6 @@ uint32_t eval(uint32_t p,uint32_t q)
 //检查满足BNF的括号表达式
 bool check_parentheses(uint32_t p,uint32_t q)
 {
-  removespace(&p,&q);
   //不符合BNF的要求
   if(tokens[p].type != TK_LP || tokens[q].type != TK_RP)
     return false;
