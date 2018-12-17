@@ -281,10 +281,10 @@ bool check_parentheses(uint32_t p,uint32_t q)
 //用于检查括号表达式是否合法，但没有检查谁和谁匹配
 bool checklegal(uint32_t p,uint32_t q)
 {
-  uint32_t lcount = 0;
+  int lcount = 0;
   while(p <= q)
   {
-    printf("lcount:%u  ",lcount);
+    printf("lcount:%d  ",lcount);
     if(tokens[p].type != TK_LP && tokens[p].type != TK_RP)
       p++;
     else if(tokens[p].type == TK_LP)
