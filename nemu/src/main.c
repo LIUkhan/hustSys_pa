@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   // ui_mainloop(is_batch_mode);
   printf("hello\n");
   bool success;
-  FILE *fp = fopen("../tools/gen-expr/input", "r");
+  FILE *fp = fopen("input", "r");
   assert(fp != NULL);
   for(int i = 0; i < 100; i++)
   {
