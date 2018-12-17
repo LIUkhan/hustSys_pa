@@ -181,8 +181,8 @@ uint32_t expr(char *e, bool *success) {
   // TODO();
   valid = true;
   uint32_t ret = eval(0,nr_token-1);
-  for(int i = 0; i < nr_token;i++)
-    printf("%d\n",tokens[i].type);
+  // for(int i = 0; i < nr_token;i++)
+  //   printf("%d\n",tokens[i].type);
   if(ret == 0 && valid == false)
     *success = false;
   else
@@ -202,18 +202,18 @@ void removespace(uint32_t *p,uint32_t *q)
 //表达式求值函数
 uint32_t eval(uint32_t p,uint32_t q)
 {
-  printf("enter\n");
+  // printf("enter\n");
   removespace(&p,&q);//避免p == q的情况漏掉排到p>q了（数字加空格)
   if(valid == false)
     return 0;
   if(p > q) {
-    printf("1");
+    // printf("1");
     printf("Error:Bad Expression!\n");//类似于6 7 -这种非法表达式的查错,
     valid = false;
     return 0;
   }
   else if(p == q) { //num hex or oct or err
-    printf("2");
+    // printf("2");
     int val;
     if(tokens[p].type == TK_HNUM) {
       if(tokens[p].str[1] == 'X')
@@ -233,11 +233,11 @@ uint32_t eval(uint32_t p,uint32_t q)
     }
   }
   else if(check_parentheses(p,q) == true) { 
-    printf("3");
+    // printf("3");
     return eval(p+1,q-1);
   }
   else {
-    printf("4");
+    // printf("4");
     if(checklegal(p,q) == false)
     {
       
@@ -246,7 +246,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-    printf(" %u %c\n",op,tokens[op].type);
+    // printf(" %u %c\n",op,tokens[op].type);
     int val1 = eval(p,op-1);
     int val2 = eval(op+1,q);
 
@@ -273,7 +273,7 @@ bool check_parentheses(uint32_t p,uint32_t q)
   else //外部有括号，保证内部合法即可，不需符合BNF
   {
     p++;q--;
-    printf("p:%u q:%u\n",p,q);
+    // printf("p:%u q:%u\n",p,q);
     return checklegal(p,q);
   }
 }
@@ -284,7 +284,7 @@ bool checklegal(uint32_t p,uint32_t q)
   int lcount = 0;
   while(p <= q)
   {
-    printf("lcount:%d  ",lcount);
+    // printf("lcount:%d  ",lcount);
     if(tokens[p].type != TK_LP && tokens[p].type != TK_RP)
       p++;
     else if(tokens[p].type == TK_LP)
