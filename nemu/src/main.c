@@ -13,15 +13,15 @@ int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
   bool success;
-  FILE *fp = fopen("testinput","r");
-  if(fp == NULL)
+  FILE *fptr = fopen("src/testinput","r");
+  if(fptr == NULL)
     printf("1\n");
   else
     printf("2\n");
   for(int i = 0; i < 100; i++)
   {
-    int sta1 = fscanf(fp,"%s",test[i].result);
-    char* sta2 = fgets(test[i].buf,65536,fp);
+    int sta1 = fscanf(fptr,"%s",test[i].result);
+    char* sta2 = fgets(test[i].buf,65536,fptr);
     printf("%d\n",sta1);
     if(sta1 == -1 || sta2 == NULL){
       printf("ERR\n");
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     }
     printf("%u \n",expr(test[i].buf,&success));
   }
-  fclose(fp);
+  fclose(fptr);
   /* Receive commands from user. */
   ui_mainloop(is_batch_mode);
   return 0;
