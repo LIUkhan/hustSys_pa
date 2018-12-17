@@ -202,7 +202,7 @@ void removespace(uint32_t *p,uint32_t *q)
 //表达式求值函数
 uint32_t eval(uint32_t p,uint32_t q)
 {
-  printf("enter\n");
+  printf("enter %u %u\n",p,q);
   removespace(&p,&q);//避免p == q的情况漏掉排到p>q了（数字加空格)
   if(valid == false)
     return 0;
