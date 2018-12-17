@@ -246,7 +246,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-    printf(" %u %c\n",op,tokens[op].type);
+    printf("\n%u,%c\n",op,tokens[op].type);
     int val1 = eval(p,op-1);
     int val2 = eval(op+1,q);
 
@@ -284,7 +284,7 @@ bool checklegal(uint32_t p,uint32_t q)
   int lcount = 0;
   while(p <= q)
   {
-    printf("lcount:%d  ",lcount);
+    // printf("lcount:%d  ",lcount);
     if(tokens[p].type != TK_LP && tokens[p].type != TK_RP)
       p++;
     else if(tokens[p].type == TK_LP)
