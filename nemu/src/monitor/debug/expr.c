@@ -160,10 +160,12 @@ static bool make_token(char *e) {
     }
 
     if (i == NR_REGEX && e[position] != '\n' && e[position] != '\0') {
-      printf("\nattention:%d %d %d\n",e[position],e[position+3],e[position+4]);
+      // printf("\nattention:%d %d %d\n",e[position],e[position+3],e[position+4]);
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
     }
+    if(e[position] == '\n')
+      e[position] = '\0';
   }
   
   return true;
