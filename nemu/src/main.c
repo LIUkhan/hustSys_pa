@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
   bool success;
-  FILE *fp = fopen("testinput","w");
+  FILE *fp = fopen("testinput","r");
   if(fp == NULL)
     printf("1\n");
   else
