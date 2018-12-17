@@ -284,7 +284,7 @@ bool checklegal(uint32_t p,uint32_t q)
   int lcount = 0;
   while(p <= q)
   {
-    // printf("lcount:%d  ",lcount);
+    printf("lcount:%d  ",lcount);
     if(tokens[p].type != TK_LP && tokens[p].type != TK_RP)
       p++;
     else if(tokens[p].type == TK_LP)
