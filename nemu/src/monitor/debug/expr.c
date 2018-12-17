@@ -191,12 +191,19 @@ uint32_t expr(char *e, bool *success) {
 }
 //用于终止出现非法表达式后函数的执行
 
-
+void removespace(uint32_t *p,uint32_t *q)
+{
+  while(tokens[*p].type == TK_NOTYPE)
+    (*p)++;
+  while(tokens[*q].type == TK_NOTYPE)
+    (*q)--;
+}
 
 //表达式求值函数
 uint32_t eval(uint32_t p,uint32_t q)
 {
   printf("enter\n");
+  removespace(&p,&q);
   if(valid == false)
     return 0;
   if(p > q) {
@@ -227,10 +234,7 @@ uint32_t eval(uint32_t p,uint32_t q)
   }
   else if(check_parentheses(p,q) == true) {
     printf("3");
-    while(tokens[p].type == TK_NOTYPE)
-      p++;
-    while(tokens[q].type == TK_NOTYPE)
-      q--;
+    removespace(&p,&q);
     return eval(p+1,q-1);
   }
   else {
@@ -264,10 +268,7 @@ uint32_t eval(uint32_t p,uint32_t q)
 //检查满足BNF的括号表达式
 bool check_parentheses(uint32_t p,uint32_t q)
 {
-  while(tokens[p].type == TK_NOTYPE)
-    p++;
-  while(tokens[q].type == TK_NOTYPE)
-    q--;
+  removespace(&p,&q);
   //不符合BNF的要求
   if(tokens[p].type != TK_LP || tokens[q].type != TK_RP)
     return false;
