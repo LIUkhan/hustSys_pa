@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
   {
     int sta1 = fscanf(fp,"%u",&test[i].result);
     char* sta2 = fgets(test[i].buf,65536,fp);
+    printf("%u\n",test[i].result);
     if(sta1 == 0 || sta2 == NULL){
       printf("ERR\n");
       continue;
