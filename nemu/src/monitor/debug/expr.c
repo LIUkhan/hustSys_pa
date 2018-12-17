@@ -5,10 +5,11 @@
  */
 #include <sys/types.h>
 #include <regex.h>
-
+bool valid = true;
 bool check_parentheses(uint32_t,uint32_t);
 uint32_t findmainop(uint32_t,uint32_t);
 bool checklegal(uint32_t,uint32_t);
+uint32_t eval(uint32_t,uint32_t);
 enum {
   TK_NOTYPE = 256, TK_LP, TK_RP, TK_HNUM, TK_ONUM, TK_REG, TK_EQ
 
@@ -65,8 +66,10 @@ typedef struct token {
   char str[32];
 } Token;
 
-Token tokens[32];
-int nr_token;//指示别识别的token数目
+Token tokens[65536];//够用的tokens数组大小 nr_token是下标
+
+
+uint32_t nr_token;//指示别识别的token数目
 //正则表达式一条一条试
 static bool make_token(char *e) {
   int position = 0;
@@ -173,12 +176,19 @@ uint32_t expr(char *e, bool *success) {
   // token已经分离出来在tokens数组了，现在要对他们进行解析,自上而下的拆解`
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
-
-  return 0;
+  valid = true;
+  uint32_t ret = eval(0,nr_token-1);
+  if(ret == 0 && valid == false)
+    *success = false;
+  else
+    *success = true;
+  return ret;
 }
 //用于终止出现非法表达式后函数的执行
-bool valid = true;
 
+
+
+//表达式求值函数
 uint32_t eval(uint32_t p,uint32_t q)
 {
   if(valid == false)
@@ -192,13 +202,13 @@ uint32_t eval(uint32_t p,uint32_t q)
     int val;
     if(tokens[p].type == TK_HNUM) {
       if(tokens[p].str[1] == 'X')
-        sscanf(tokens[p].str,"0X%x",&val);
+        sscanf(tokens[p].str,"0X%xu",&val);
       else
-        sscanf(tokens[p].str,"0x%x",&val);
+        sscanf(tokens[p].str,"0x%xu",&val);
       return val;
     }
     else if(tokens[p].type == TK_ONUM){
-      sscanf(tokens[p].str,"%d",&val);
+      sscanf(tokens[p].str,"%uu",&val);
       return val;
     }
     else {

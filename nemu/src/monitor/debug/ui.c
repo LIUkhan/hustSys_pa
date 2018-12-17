@@ -121,6 +121,7 @@ static struct {
   { "si","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
   { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
   { "x","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
+  { "p","p EXPR 求出表达式EXPR的值"},
   /* TODO: Add more commands */
 
 };
