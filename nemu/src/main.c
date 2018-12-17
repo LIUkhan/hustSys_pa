@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   // ui_mainloop(is_batch_mode);
   printf("hello\n");
   bool success;
-  FILE *fp = fopen("input", "r");
+  FILE *fp = fopen("testinput", "r");
   if(fp == NULL)
     printf("1\n");
   else
