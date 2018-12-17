@@ -317,9 +317,11 @@ uint32_t findmainop(uint32_t p,uint32_t q)
         if(tokens[p].type == TK_LP) {
           lcount++;p++;
         }
-        else {
+        else if((tokens[p].type == TK_RP)){
           lcount--;p++;
         }
+        else
+          p++;
       }//跳出while时指向匹配的右括号后的第一个字符
     }
     else if(tokens[p].type != '+' && tokens[p].type != '-' && tokens[p].type != '*' && tokens[p].type != '/')
