@@ -180,6 +180,7 @@ uint32_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
   valid = true;
+  printf("%d\n",nr_token);
   uint32_t ret = eval(0,nr_token-1);
   if(ret == 0 && valid == false)
     *success = false;
