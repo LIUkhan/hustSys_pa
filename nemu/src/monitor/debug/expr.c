@@ -202,18 +202,18 @@ void removespace(uint32_t *p,uint32_t *q)
 //表达式求值函数
 uint32_t eval(uint32_t p,uint32_t q)
 {
-  printf("enter %u %u\n",p,q);
+  // printf("enter %u %u\n",p,q);
   removespace(&p,&q);//避免p == q的情况漏掉排到p>q了（数字加空格)
   if(valid == false)
     return 0;
   if(p > q) {
-    printf("1");
+    // printf("1");
     printf("Error:Bad Expression!\n");//类似于6 7 -这种非法表达式的查错,
     valid = false;
     return 0;
   }
   else if(p == q) { //num hex or oct or err
-    printf("2");
+    // printf("2");
     int val;
     if(tokens[p].type == TK_HNUM) {
       if(tokens[p].str[1] == 'X')
@@ -233,11 +233,11 @@ uint32_t eval(uint32_t p,uint32_t q)
     }
   }
   else if(check_parentheses(p,q) == true) { 
-    printf("3");
+    // printf("3");
     return eval(p+1,q-1);
   }
   else {
-    printf("4");
+    // printf("4");
     if(checklegal(p,q) == false)
     {
       
@@ -250,7 +250,7 @@ uint32_t eval(uint32_t p,uint32_t q)
 
     uint32_t val1 = eval(p,op-1);
     uint32_t val2 = eval(op+1,q);
-    printf("\n%u %c %u :%u\n",val1,tokens[op].type,val2,op);
+    // printf("\n%u %c %u :%u\n",val1,tokens[op].type,val2,op);
     switch(tokens[op].type)
     {
       case '+': return val1 + val2;
