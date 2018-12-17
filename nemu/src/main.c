@@ -5,7 +5,7 @@ int init_monitor(int, char *[]);
 void ui_mainloop(int);
 
 struct{
-  uint32_t result;
+  char result[100];
   char buf[65536];
 } test[100];
 extern uint32_t expr(char *, bool *);
@@ -20,14 +20,14 @@ int main(int argc, char *argv[]) {
     printf("2\n");
   for(int i = 0; i < 100; i++)
   {
-    int sta1 = fscanf(fp,"%u",&test[i].result);
+    int sta1 = fscanf(fp,"%s",test[i].result);
     char* sta2 = fgets(test[i].buf,65536,fp);
     printf("%d\n",sta1);
-    if(sta1 == 0 || sta2 == NULL){
+    if(sta1 == -1 || sta2 == NULL){
       printf("ERR\n");
       continue;
     }
-    printf("%u  %u\n",expr(test[i].buf,&success),test[i].result);
+    printf("%u \n",expr(test[i].buf,&success));
   }
   fclose(fp);
   /* Receive commands from user. */
