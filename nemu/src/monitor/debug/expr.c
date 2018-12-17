@@ -330,7 +330,8 @@ uint32_t findmainop(uint32_t p,uint32_t q)
       p++;
     else
     {
-      position = p;
+      if(!((tokens[position].type == '+' || tokens[position].type == '-') && (tokens[p].type == '*' || tokens[p].type == '/')))
+        position = p;
       p++;
     }
   }
