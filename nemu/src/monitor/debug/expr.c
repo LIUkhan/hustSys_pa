@@ -232,7 +232,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
   }
-  else if(check_parentheses(p,q) == true && checklegal(p+1,q-1) != false) { //没有第二个((87u))+(89u)就会出错
+  else if(check_parentheses(p,q) == true) { 
     printf("3");
     return eval(p+1,q-1);
   }
@@ -273,6 +273,7 @@ bool check_parentheses(uint32_t p,uint32_t q)
   else //外部有括号，保证内部合法即可，不需符合BNF
   {
     p++;q--;
+    printf("p:%u q:%u\n",p,q);
     return checklegal(p,q);
   }
 }
@@ -283,6 +284,7 @@ bool checklegal(uint32_t p,uint32_t q)
   uint32_t lcount = 0;
   while(p <= q)
   {
+    printf("lcount:%u  ",lcount);
     if(tokens[p].type != TK_LP && tokens[p].type != TK_RP)
       p++;
     else if(tokens[p].type == TK_LP)
