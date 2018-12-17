@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
   printf("hello\n");
   bool success;
   FILE *fp = fopen("../tools/gen-expr/input", "r");
+  assert(fp != NULL);
   for(int i = 0; i < 100; i++)
   {
     int sta1 = fscanf(fp,"%u",&test[i].result);
