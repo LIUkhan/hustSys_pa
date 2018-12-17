@@ -298,7 +298,7 @@ bool checklegal(uint32_t p,uint32_t q)
         return false;
     }
   }
-  if(lcount != 0) //'('过多
+  if(lcount != 0) //'('过多,因为要检查小于0的情况，所以lcount必须是有符号数
     return false;
   return true;
 }
