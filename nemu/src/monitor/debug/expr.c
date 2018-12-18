@@ -235,13 +235,24 @@ uint32_t eval(uint32_t p,uint32_t q)
     int val;
     if(tokens[p].type == TK_HNUM) {
       if(tokens[p].str[1] == 'X')
-        sscanf(tokens[p].str,"0X%xu",&val);
+        if(tokens[p].str[strlen(tokens[p].str)-1] == 'u')
+          sscanf(tokens[p].str,"0X%x",&val);
+        else
+          sscanf(tokens[p].str,"0X%xu",&val);
       else
-        sscanf(tokens[p].str,"0x%xu",&val);
+        if(tokens[p].str[strlen(tokens[p].str)-1] == 'u')
+          sscanf(tokens[p].str,"0x%x",&val);
+        else
+          sscanf(tokens[p].str,"0x%xu",&val);
+      printf("%u\n",val);
       return val;
     }
     else if(tokens[p].type == TK_ONUM){
-      sscanf(tokens[p].str,"%uu",&val);
+      if(tokens[p].str[strlen(tokens[p].str)-1] == 'u')
+        sscanf(tokens[p].str,"%u",&val);
+      else
+        sscanf(tokens[p].str,"%uu",&val);
+      printf("%u\n",val);
       return val;
     }
     else if(tokens[p].type == TK_REG) {
