@@ -252,7 +252,7 @@ uint32_t eval(uint32_t p,uint32_t q)
         sscanf(tokens[p].str,"%u",&val);
       else
         sscanf(tokens[p].str,"%uu",&val);
-      printf("%u\n",val);
+      printf("%c %u\n",tokens[p].str[strlen(tokens[p].str)-1],val);
       return val;
     }
     else if(tokens[p].type == TK_REG) {
