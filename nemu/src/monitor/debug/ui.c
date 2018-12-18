@@ -174,14 +174,14 @@ static struct {
   int (*handler) (char *);
 } cmd_table [] = {
   { "help", "Display informations about all supported commands", cmd_help },
-  { "c   ", "Continue the execution of the program", cmd_c },
-  { "q   ", "Exit NEMU", cmd_q },
-  { "si  ","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
+  { "c", "Continue the execution of the program", cmd_c },
+  { "q", "Exit NEMU", cmd_q },
+  { "si","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
   { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
-  { "x   ","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
-  { "p   ","p EXPR 求出表达式EXPR的值",cmd_p},
-  { "w   ", "w EXPR 当表达式EXPR的值发生变化时,	暂停程序执行",cmd_w},
-  { "d   ","d N 删除编号为N的监视点",cmd_d},
+  { "x","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
+  { "p","p EXPR 求出表达式EXPR的值",cmd_p},
+  { "w", "w EXPR 当表达式EXPR的值发生变化时,	暂停程序执行",cmd_w},
+  { "d","d N 删除编号为N的监视点",cmd_d},
   /* TODO: Add more commands */
 
 };
@@ -196,7 +196,7 @@ static int cmd_help(char *args) {
   if (arg == NULL) {
     /* no argument given */
     for (i = 0; i < NR_CMD; i ++) {
-      printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+      printf("%-4s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
   }
   else {
