@@ -263,11 +263,11 @@ uint32_t eval(uint32_t p,uint32_t q)
           }
       }
       valid = false;
-      printf("Error:Regname Error!");
+      printf("Error:Regname Error!\n");
       return 0;
     }
     else {
-      printf("Error:Syntax error!");
+      printf("Error:Syntax error!\n");
       valid = false;
       return 0;
     }

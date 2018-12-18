@@ -28,30 +28,33 @@ void setWP(char *exprinfo) {
     printf("You can only set %d watchpoints!\n",NR_WP);
     return;
   }
-  // bool success;
-  // assert(free_ == NULL);
-  WP *new_wp = free_;
-  if(free_->next == NULL) {
-    freetail = NULL;
-  }
-  free_ = free_->next;
-  if(head == NULL) {
-    head = new_wp;
-    tail = new_wp;
-    tail->next = NULL;
-  }
-  else {
-    tail->next = new_wp;
-    tail = tail->next;
-    tail->next = NULL;
-  }
   bool success;
-  strcpy(tail->exprbuf,exprinfo);
-  tail->oldvalue = expr(exprinfo,&success);
+  // assert(free_ == NULL);
+  uint32_t val = expr(exprinfo,&success);
   if(!success)
     printf("Error: The Experation isn't legal!\n");
   else
+  {
+    WP *new_wp = free_;
+    if(free_->next == NULL) {
+      freetail = NULL;
+    }
+    free_ = free_->next;
+    if(head == NULL) {
+      head = new_wp;
+      tail = new_wp;
+      tail->next = NULL;
+    }
+    else {
+      tail->next = new_wp;
+      tail = tail->next;
+      tail->next = NULL;
+    }
+
+    strcpy(tail->exprbuf,exprinfo);
+    tail->oldvalue = val;
     printf("WatchPoint %u has set successfully!\n",tail->NO);
+  }
 }
 
 void deleteWP(uint32_t n) {
