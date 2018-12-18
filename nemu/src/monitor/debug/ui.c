@@ -136,6 +136,7 @@ static int cmd_d(char *args)
   {
     uint32_t val;
     sscanf(arg1,"%u",&val);
+    printf("%u\n",val);
     deleteWP(val);
   }
   else

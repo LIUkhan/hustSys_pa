@@ -100,7 +100,7 @@ void outWPinfo()
 {
   WP* temp = head;
   while(temp != NULL) {
-    printf("%-6u%-20s%-10u\n",temp->NO,temp->exprbuf,temp->oldvalue);
+    printf("%-6u%-30s%-10u\n",temp->NO,temp->exprbuf,temp->oldvalue);
     temp = temp->next;
   }
 }
