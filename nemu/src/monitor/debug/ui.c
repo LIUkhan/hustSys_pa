@@ -18,7 +18,7 @@ char* rl_gets() {
     line_read = NULL;
   }
   char ch;
-  while((ch=getchar())!=EOF);//清空缓冲区
+  while((ch=getchar())!='\n');//清空缓冲区
   line_read = readline("(nemu) ");
 
   if (line_read && *line_read) {
