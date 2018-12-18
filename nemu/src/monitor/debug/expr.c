@@ -262,6 +262,22 @@ uint32_t eval(uint32_t p,uint32_t q)
             return cpu.gpr[i]._32;
           }
       }
+      for(int i = R_EAX; i <= R_EDI; i++) {
+          if(!strcmp(regsw[i],tokens[p].str+1)) {
+            return cpu.gpr[i]._16;
+          }
+      }
+      for(int i = R_EAX; i <= R_EDI; i++) {
+          if(!strcmp(regsb[i],tokens[p].str+1) && regsb[i][1] == 'l') {
+            return cpu.gpr[i]._8[0];
+          }
+          else if(!strcmp(regsb[i],tokens[p].str+1) && regsb[i][1] == 'h') {
+            return cpu.gpr[i]._8[1];
+          }
+      }
+      if(!strcmp("eip",tokens[p].str+1)) {
+        return cpu.eip;
+      }
       valid = false;
       printf("Error:Regname Error!\n");
       return 0;
