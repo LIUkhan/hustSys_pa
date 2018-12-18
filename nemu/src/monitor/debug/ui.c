@@ -13,6 +13,7 @@ extern bool hasWP();
 extern void deleteWP(uint32_t);
 extern void outWPinfo();
 extern void setWP(char *);
+extern bool checkWP();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
@@ -43,14 +44,22 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) {
   if(args == NULL)
+  {
     exec_wrapper(1);
+    if(checkWP())
+      nemu_state = NEMU_STOP;
+  }
   else {
     char *argnum = strtok(args," ");
     char *test = strtok(NULL," ");//检查有无多余参数
     if(test == NULL) {
       int cmdnum = atoi(argnum);
       for(int i = 0; i < cmdnum; i++)
+      {
         exec_wrapper(1);
+        if(checkWP())
+        nemu_state = NEMU_STOP;
+      }
     }
     else
       printf("Error:too many arguments\n");

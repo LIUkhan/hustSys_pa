@@ -88,6 +88,7 @@ bool checkWP()
   WP* temp = head;
   while(temp != NULL) {
     uint32_t val = expr(temp->exprbuf,&success);
+    printf("%x %x\n",temp->value,val);
     if(temp->value != val)
     {
       printf("WatchPoint %u has changed!\n",temp->NO);
