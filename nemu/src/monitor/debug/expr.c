@@ -29,7 +29,7 @@ static struct rule {
   {"\\(",TK_LP},        //LEFT PARENTHESIS
   {"\\)",TK_RP},        //RIGHT PARENTHESIS
   {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+u", TK_HNUM}, //16进制数
-	{"[0-9]+u", TK_ONUM},  //10进制数
+	{"[0-9]+u{1}", TK_ONUM},  //10进制数
   {"\\$[a-z]+", TK_REG},//没有限制字母数字，不做判断，由软件判断
   
   
@@ -247,6 +247,7 @@ uint32_t eval(uint32_t p,uint32_t q)
     else if(tokens[p].type == TK_REG) {
       for(int i = R_EAX; i <= R_EDI; i++) {
           if(!strcmp(regsl[i],tokens[p].str+1)) {
+            printf("%s %s\n",regsl[i],tokens[p].str+1);
             return cpu.gpr[i]._32;
           }
       }
