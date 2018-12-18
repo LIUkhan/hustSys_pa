@@ -29,7 +29,7 @@ void setWP(char *exprinfo) {
     return;
   }
   // bool success;
-  assert(free_ == NULL);
+  // assert(free_ == NULL);
   WP *new_wp = free_;
   if(free_->next == NULL) {
     freetail = NULL;
