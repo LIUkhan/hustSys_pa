@@ -248,10 +248,10 @@ uint32_t eval(uint32_t p,uint32_t q)
       return val;
     }
     else if(tokens[p].type == TK_ONUM){
-      // if(tokens[p].str[strlen(tokens[p].str)-1] == 'u')
+      if(tokens[p].str[strlen(tokens[p].str)-1] == 'u')
         sscanf(tokens[p].str,"%u",&val);
-      // else
-      //   sscanf(tokens[p].str,"%uu",&val);
+      else
+        sscanf(tokens[p].str,"%uu",&val);
       printf("%c %u\n",tokens[p].str[strlen(tokens[p].str)-1],val);
       return val;
     }
