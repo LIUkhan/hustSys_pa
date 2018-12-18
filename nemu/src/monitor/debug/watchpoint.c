@@ -82,6 +82,7 @@ void deleteWP(uint32_t n) {
 
 bool checkWP()
 {
+  printf("checkWP\n");
   bool change = false;
   bool success;
   WP* temp = head;
