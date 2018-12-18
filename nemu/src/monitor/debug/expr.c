@@ -220,18 +220,18 @@ void removespace(uint32_t *p,uint32_t *q)
 //表达式求值函数
 uint32_t eval(uint32_t p,uint32_t q)
 {
-  printf("enter %u %u\n",p,q);
+  // printf("enter %u %u\n",p,q);
   removespace(&p,&q);//避免p == q的情况漏掉排到p>q了（数字加空格)
   if(valid == false)
     return 0;
   if(p > q) {
-    printf("1");
+    // printf("1");
     printf("Error:Bad Expression!\n");//类似于6 7 -这种非法表达式的查错,
     valid = false;
     return 0;
   }
   else if(p == q) { //num hex or oct or err
-    printf("2");
+    // printf("2");
     int val;
     if(tokens[p].type == TK_HNUM) {
       if(tokens[p].str[1] == 'X')
@@ -289,18 +289,18 @@ uint32_t eval(uint32_t p,uint32_t q)
     }
   }
   else if(check_parentheses(p,q) == true) { 
-    printf("3");
+    // printf("3");
     return eval(p+1,q-1);
   }
   else if(tokens[p].type == DEREF)//处理取地址符
   {
-    printf("4");
+    // printf("4");
     uint32_t addr = eval(p+1,q);
     // printf("0x%08x\n",addr);
     return vaddr_read(addr,4);
   }
   else {
-    printf("5");
+    // printf("5");
     if(checklegal(p,q) == false)
     {
       

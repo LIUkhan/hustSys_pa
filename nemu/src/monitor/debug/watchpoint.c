@@ -111,7 +111,7 @@ void outWPinfo()
 {
   WP* temp = head;
   while(temp != NULL) {
-    printf("%-6u%-30s%-10u%-10u\n",temp->NO,temp->exprbuf,temp->oldvalue,temp->value);
+    printf("%-6u%-30s0x%-8x  0x%-8x\n",temp->NO,temp->exprbuf,temp->oldvalue,temp->value);
     temp = temp->next;
   }
 }
