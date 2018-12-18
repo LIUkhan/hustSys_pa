@@ -392,11 +392,14 @@ uint32_t findmainop(uint32_t p,uint32_t q)
           p++;
       }//跳出while时指向匹配的右括号后的第一个字符
     }
-    else if(tokens[p].type != '+' && tokens[p].type != '-' && tokens[p].type != '*' && tokens[p].type != '/')
+    else if(tokens[p].type != TK_EQ && tokens[p].type != TK_NEQ && tokens[p].type != TK_AND && tokens[p].type != '+' && tokens[p].type != '-' && tokens[p].type != '*' && tokens[p].type != '/')
       p++;
     else
     {
-      if(!((tokens[position].type == '+' || tokens[position].type == '-') && (tokens[p].type == '*' || tokens[p].type == '/')))
+      if(!(((tokens[position].type == '+' || tokens[position].type == '-')\
+       && (tokens[p].type == '*' || tokens[p].type == '/')) ||  \
+      ( (tokens[position].type == TK_EQ || tokens[position].type == TK_NEQ || tokens[position].type == TK_AND) && \
+      (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == '+' || tokens[p].type == '-') ) ) )
         position = p;
       p++;
     }
