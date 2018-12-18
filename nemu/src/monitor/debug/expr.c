@@ -268,12 +268,12 @@ uint32_t eval(uint32_t p,uint32_t q)
           }
       }
       for(int i = R_EAX; i <= R_EDI; i++) {
-          if(!strcmp(regsb[i],tokens[p].str+1) && regsb[i][1] == 'l') {
+        if(!strcmp(regsb[i],tokens[p].str+1)) {
+          if(regsb[i][1] == 'l')
             return cpu.gpr[i]._8[0];
-          }
-          else if(!strcmp(regsb[i],tokens[p].str+1) && regsb[i][1] == 'h') {
-            return cpu.gpr[i]._8[1];
-          }
+          else if(regsb[i][1] == 'h')
+            return cpu.gpr[i-4]._8[1];
+        }
       }
       if(!strcmp("eip",tokens[p].str+1)) {
         return cpu.eip;
