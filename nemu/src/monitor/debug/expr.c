@@ -11,7 +11,7 @@ uint32_t findmainop(uint32_t,uint32_t);
 bool checklegal(uint32_t,uint32_t);
 uint32_t eval(uint32_t,uint32_t);
 enum {
-  TK_NOTYPE = 256, TK_LP, TK_RP, TK_HNUM, TK_ONUM, TK_REG, TK_EQ
+  TK_NOTYPE = 256, TK_LP, TK_RP, TK_HNUM, TK_ONUM, TK_REG, TK_EQ,TK_NEQ,TK_AND,DEREF
 
   /* TODO: Add more token types */
 
@@ -28,6 +28,7 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces' '
   {"\\(",TK_LP},        //LEFT PARENTHESIS
   {"\\)",TK_RP},        //RIGHT PARENTHESIS
+  {"\\*",DEREF},        //取地址符号，区分于乘号
   {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+u", TK_HNUM}, //16进制数
 	{"[0-9]+u", TK_ONUM},  //10进制数
   {"\\$[a-z]+", TK_REG},//没有限制字母数字，不做判断，由软件判断
@@ -37,7 +38,9 @@ static struct rule {
   {"\\*", '*'},         // multiply '*'
   {"\\-", '-'},         // minus '-'
   {"\\+", '+'},         // plus '+'
-  {"==", TK_EQ}         // equal '='
+  {"==", TK_EQ},        // equal '=='
+  {"!=",TK_NEQ},        //noequal "!="
+  {"&&",TK_AND}         //and,"&&"
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -137,6 +140,14 @@ static bool make_token(char *e) {
             tokens[nr_token++].type = TK_EQ;
             break;
           }
+          case TK_NEQ:{
+            tokens[nr_token++].type = TK_NEQ;
+            break;
+          }
+          case TK_AND:{
+            tokens[nr_token++].type = TK_AND;
+            break;
+          }
           case '+':{
             tokens[nr_token++].type = '+';
             break;
@@ -179,6 +190,14 @@ uint32_t expr(char *e, bool *success) {
   // token已经分离出来在tokens数组了，现在要对他们进行解析,自上而下的拆解`
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
+  //扫描token，分出取地址符
+  for	(int i =	0; i < nr_token; i++)	{
+      if(tokens[i].type	== '*' && (i == 0	|| tokens[i - 1].type	==	'+' || tokens[i - 1].type	== '-' || tokens[i - 1].type == '/' || tokens[i - 1].type	== '*'\
+      || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND)) {
+          tokens[i].type	=	DEREF;
+      }
+  }
+
   valid = true;
   uint32_t ret = eval(0,nr_token-1);
   // for(int i = 0; i < nr_token;i++)
@@ -226,6 +245,13 @@ uint32_t eval(uint32_t p,uint32_t q)
       sscanf(tokens[p].str,"%uu",&val);
       return val;
     }
+    else if(tokens[p].type == TK_REG) {
+      for(int i = R_EAX; i <= R_EDI; i++) {
+          if(!strcmp(regsl[i],tokens[p].str+1)) {
+            return cpu.gpr[i]._32;
+          }
+        }
+    }
     else {
       printf("Error:Syntax error!");
       valid = false;
@@ -236,8 +262,13 @@ uint32_t eval(uint32_t p,uint32_t q)
     // printf("3");
     return eval(p+1,q-1);
   }
+  else if(tokens[p].type == DEREF)//处理取地址符
+  {
+    //printf("4");
+    return vaddr_read(eval(p+1,q),4);
+  }
   else {
-    // printf("4");
+    // printf("5");
     if(checklegal(p,q) == false)
     {
       
@@ -246,8 +277,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-    
-
+   
     uint32_t val1 = eval(p,op-1);
     uint32_t val2 = eval(op+1,q);
     // printf("\n%u %c %u :%u\n",val1,tokens[op].type,val2,op);
@@ -257,6 +287,9 @@ uint32_t eval(uint32_t p,uint32_t q)
       case '-': return val1 - val2;
       case '*': return val1 * val2;
       case '/': return val1 / val2;
+      case TK_EQ: return (uint32_t)(val1 == val2);
+      case TK_NEQ: return (uint32_t)(val1 != val2);
+      case TK_AND: return (uint32_t)(val1 && val2);
       default: {
         printf("Error:Invalid operation!\n");
         valid = false;
@@ -264,7 +297,9 @@ uint32_t eval(uint32_t p,uint32_t q)
       }
     }
   }
+  return 0;
 }
+
 //检查满足BNF的括号表达式
 bool check_parentheses(uint32_t p,uint32_t q)
 {

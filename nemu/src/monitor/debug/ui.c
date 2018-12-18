@@ -111,9 +111,11 @@ static int cmd_p(char *args) {
   if(args == NULL) {
     printf("Error: Instruction Format: p EXPR,use help to learn more\n");
   }
-  // else {
-    
-  // }
+  else {
+    bool success;
+    uint32_t ret = expr(args,&success);
+    printf("result: %u\n",ret);
+  }
   return 0;
 }
 
