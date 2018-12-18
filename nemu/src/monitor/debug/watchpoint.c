@@ -4,7 +4,7 @@
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
-static WP *head, *free_;
+static WP *head, *free_,*tail,*freetail;
 
 void init_wp_pool() {
   int i;
@@ -15,9 +15,74 @@ void init_wp_pool() {
   wp_pool[NR_WP - 1].next = NULL;
 
   head = NULL;
+  tail = NULL;
   free_ = wp_pool;
+  freetail = &(wp_pool[NR_WP-1]);
 }
 
 /* TODO: Implement the functionality of watchpoint */
 
+//传入什么？
+bool setWP(char *exprinfo) {
+  // if(free_ == NULL) {
+  //   printf("You can only set %d watchpoints!\n",NR_WP);
+  //   return false;
+  // }
+  bool success;
+  assert(free_ == NULL);
+  WP *new_wp = free_;
+  if(free_->next == NULL) {
+    freetail = NULL;
+  }
+  free_ = free_->next;
+  if(head == NULL) {
+    head = new_wp;
+    tail = new_wp;
+    tail->next = NULL;
+  }
+  else {
+    tail->next = new_wp;
+    tail = tail->next;
+    tail->next = NULL;
+  }
+  strcpy(tail->exprbuf,exprinfo);
+  tail->oldvalue = expr(exprinfo,&success);
+  if(!success)
+    printf("Error: The Experation isn't legal!\n");
+  return true;
+}
 
+bool deleteWP(uint32_t n) {
+  WP *temp = head;
+  WP *front = head;
+  while(temp != NULL) {
+    if(temp->NO == n)
+    {
+      front->next = temp->next;
+      freetail->next = temp;
+      freetail = freetail->next;
+      freetail->next = NULL;
+      printf("Success: remove watchpoint %u\n",n);
+      return true;
+    }
+    front = temp;
+    temp = temp->next;
+  }
+  printf("Watchpoint %u is free.Delete Error!\n",n);
+  return false;
+}
+
+bool checkWP()
+{
+  bool change = false;
+  bool success;
+  WP* temp = head;
+  while(temp != NULL) {
+    if(temp->oldvalue != expr(temp->exprbuf,&success))
+    {
+      printf("WatchPoint %u has changed!\n",temp->NO);
+      change = true;
+    }
+  }
+  return change;
+}
