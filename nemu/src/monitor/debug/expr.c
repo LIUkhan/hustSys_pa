@@ -28,7 +28,7 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces' '
   {"\\(",TK_LP},        //LEFT PARENTHESIS
   {"\\)",TK_RP},        //RIGHT PARENTHESIS
-  {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+u", TK_HNUM}, //16进制数
+  {"0x[0-9a-fA-F]+|0X[0-9a-fA-F]+u?", TK_HNUM}, //16进制数
 	{"[0-9]+u?", TK_ONUM},  //10进制数
   {"\\$[a-z]+", TK_REG},//没有限制字母数字，不做判断，由软件判断
   
