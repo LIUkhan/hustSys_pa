@@ -11,6 +11,7 @@ typedef struct watchpoint {
   //默认4个字节，以后再改
   //old value
   uint32_t oldvalue;
+  uint32_t value;
   //存储表达式
   char exprbuf[65536];
 

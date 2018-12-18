@@ -52,7 +52,7 @@ void setWP(char *exprinfo) {
     }
 
     strcpy(tail->exprbuf,exprinfo);
-    tail->oldvalue = val;
+    tail->value = val;
     printf("WatchPoint %u has set successfully!\n",tail->NO);
   }
 }
@@ -86,10 +86,13 @@ bool checkWP()
   bool success;
   WP* temp = head;
   while(temp != NULL) {
-    if(temp->oldvalue != expr(temp->exprbuf,&success))
+    uint32_t val = expr(temp->exprbuf,&success);
+    if(temp->value != val)
     {
       printf("WatchPoint %u has changed!\n",temp->NO);
       change = true;
+      temp->oldvalue = temp->value;
+      temp->value = val;
     }
     temp = temp->next;
   }
@@ -108,7 +111,7 @@ void outWPinfo()
 {
   WP* temp = head;
   while(temp != NULL) {
-    printf("%-6u%-30s%-10u\n",temp->NO,temp->exprbuf,temp->oldvalue);
+    printf("%-6u%-30s%-10u%-10u\n",temp->NO,temp->exprbuf,temp->oldvalue,temp->value);
     temp = temp->next;
   }
 }
