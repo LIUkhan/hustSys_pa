@@ -91,6 +91,7 @@ bool checkWP()
       printf("WatchPoint %u has changed!\n",temp->NO);
       change = true;
     }
+    temp = temp->next;
   }
   return change;
 }
