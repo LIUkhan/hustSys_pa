@@ -10,8 +10,10 @@
 void cpu_exec(uint64_t);
 void exec_wrapper(bool);
 extern bool hasWP();
-extern bool deleteWP(uint32_t);
+extern void deleteWP(uint32_t);
 extern void outWPinfo();
+extern void setWP(char *);
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -141,6 +143,16 @@ static int cmd_d(char *args)
   return 0;
 }
 
+static int cmd_w(char *args)
+{
+  if(args == NULL) {
+    printf("Error: Instruction Format: w EXPR,use help to learn more\n");
+    return 0;
+  }
+  setWP(args);
+  return 0;
+}
+
 static int cmd_p(char *args) {
   if(args == NULL) {
     printf("Error: Instruction Format: p EXPR,use help to learn more\n");
@@ -167,6 +179,7 @@ static struct {
   { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
   { "x","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
   { "p","p EXPR 求出表达式EXPR的值",cmd_p},
+  { "w", "w EXPR 当表达式EXPR的值发生变化时,	暂停程序执行",cmd_w},
   { "d","d N 删除编号为N的监视点",cmd_d},
   /* TODO: Add more commands */
 
