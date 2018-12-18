@@ -100,10 +100,10 @@ static int cmd_x(char *args) {
       int n = atoi(arg1);
       uint32_t addr;
       sscanf(arg2,"%x",&addr);
-      printf("0x%08x\n",addr);
+      printf("addr:0x%08x\n",addr);
       for(int i = 0; i < n; i++)
       {
-        printf("0x%08x\n",paddr_read(addr,4));
+        printf("value:0x%08x\n",paddr_read(addr,4));
         addr += 4;//addr加1，移动一个字节,0xXXXXXXXX中高位对应高地址
       }
     }
