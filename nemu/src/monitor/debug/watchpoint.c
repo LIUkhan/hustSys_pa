@@ -58,9 +58,13 @@ void deleteWP(uint32_t n) {
   WP *temp = head;
   WP *front = head;
   while(temp != NULL) {
+    
     if(temp->NO == n)
     {
-      front->next = temp->next;
+      if(front == temp)
+        head = front->next;
+      else
+        front->next = temp->next;
       freetail->next = temp;
       freetail = freetail->next;
       freetail->next = NULL;

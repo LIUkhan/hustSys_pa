@@ -262,6 +262,7 @@ uint32_t eval(uint32_t p,uint32_t q)
             return cpu.gpr[i]._32;
           }
       }
+      valid = false;
       printf("Error:Regname Error!");
       return 0;
     }
