@@ -86,3 +86,19 @@ bool checkWP()
   }
   return change;
 }
+
+bool hasWP()
+{
+  if(head == NULL)
+    return false;
+  else
+    return true;
+}
+
+void outWPinfo()
+{
+  WP* temp = head;
+  while(temp != NULL) {
+    printf("%6u%20s%10u\n",temp->NO,temp->exprbuf,temp->oldvalue);
+  }
+}

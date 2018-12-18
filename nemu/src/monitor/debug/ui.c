@@ -9,6 +9,9 @@
 
 void cpu_exec(uint64_t);
 void exec_wrapper(bool);
+extern bool hasWP();
+extern bool deleteWP(uint32_t);
+extern void outWPinfo();
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -69,7 +72,13 @@ static int cmd_info(char *args) {
         }
       }
       else if(!strcmp(arg,"w")) {
-        printf("功能待完善\n");
+        if(hasWP()) {
+          printf("Num   Expr                          Value     \n");//6 20 10
+          outWPinfo();
+        }
+        else {
+          printf("No watchpoints\n");
+        }
       }
       else {
         printf("Error:the argument should be w or r\n");
@@ -113,6 +122,25 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_d(char *args)
+{
+  if(args == NULL) {
+    printf("Error: Instruction Format: d N,use help to learn more\n");
+    return 0;
+  }
+  char *arg1 = strtok(args," ");
+  char *test = strtok(NULL," ");
+  if(test == NULL)
+  {
+    uint32_t val;
+    sscanf(arg1,"%u",&val);
+    deleteWP(val);
+  }
+  else
+    printf("Error:too many arguments\n");
+  return 0;
+}
+
 static int cmd_p(char *args) {
   if(args == NULL) {
     printf("Error: Instruction Format: p EXPR,use help to learn more\n");
@@ -139,6 +167,7 @@ static struct {
   { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
   { "x","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
   { "p","p EXPR 求出表达式EXPR的值",cmd_p},
+  { "d","d N 删除编号为N的监视点",cmd_d},
   /* TODO: Add more commands */
 
 };
