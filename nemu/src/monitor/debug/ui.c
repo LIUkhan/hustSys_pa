@@ -120,7 +120,7 @@ static int cmd_p(char *args) {
   else {
     bool success;
     uint32_t ret = expr(args,&success);
-    printf("result: %u\n",ret);
+    printf("result: %u (hex value:0x%08x)\n",ret,ret);
   }
   return 0;
 }
