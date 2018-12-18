@@ -44,22 +44,13 @@ static int cmd_q(char *args) {
 
 static int cmd_si(char *args) {
   if(args == NULL)
-  {
-    exec_wrapper(1);
-    if(checkWP())
-      nemu_state = NEMU_STOP;
-  }
+    cpu_exec(1);
   else {
     char *argnum = strtok(args," ");
     char *test = strtok(NULL," ");//检查有无多余参数
     if(test == NULL) {
       int cmdnum = atoi(argnum);
-      for(int i = 0; i < cmdnum; i++)
-      {
-        exec_wrapper(1);
-        if(checkWP())
-        nemu_state = NEMU_STOP;
-      }
+      cpu_exec(cmdnum);
     }
     else
       printf("Error:too many arguments\n");
