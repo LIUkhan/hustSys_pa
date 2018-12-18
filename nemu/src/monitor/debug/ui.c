@@ -84,12 +84,16 @@ static int cmd_info(char *args) {
 static int cmd_x(char *args) {
   if(args == NULL) {
     printf("Error: Instruction Format: x N EXPR,use help to learn more\n");
+    return 0;
   }
   else {
     char *arg1 = strtok(args," ");
     char *arg2 = strtok(NULL," ");
     if(arg2 == NULL)
+    {
       printf("Error: Instruction Format: x N EXPR,use help to learn more\n");
+      return 0;
+    }
     char *test = strtok(NULL," ");//检查有无多余参数
     if(test == NULL)
     {
