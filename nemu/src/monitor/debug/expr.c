@@ -279,7 +279,7 @@ uint32_t eval(uint32_t p,uint32_t q)
   {
     // printf("4");
     uint32_t addr = eval(p+1,q);
-    printf("0x%08x\n",addr);
+    // printf("0x%08x\n",addr);
     return vaddr_read(addr,4);
   }
   else {
