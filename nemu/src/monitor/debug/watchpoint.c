@@ -77,7 +77,7 @@ void deleteWP(uint32_t n) {
     front = temp;
     temp = temp->next;
   }
-  printf("Watchpoint %u is free.Delete Error!\n",n);
+  printf("Delete Error!\n");
 }
 
 bool checkWP()
