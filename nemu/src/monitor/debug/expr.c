@@ -99,7 +99,7 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        memset(tokens[nr_token].str,0,strlen(tokens[nr_token].str));
         switch (rules[i].token_type) {
           default: {
             break;
