@@ -250,7 +250,9 @@ uint32_t eval(uint32_t p,uint32_t q)
           if(!strcmp(regsl[i],tokens[p].str+1)) {
             return cpu.gpr[i]._32;
           }
-        }
+      }
+      printf("Error:Regname Error!");
+      return 0;
     }
     else {
       printf("Error:Syntax error!");
@@ -297,7 +299,6 @@ uint32_t eval(uint32_t p,uint32_t q)
       }
     }
   }
-  return 0;
 }
 
 //检查满足BNF的括号表达式
