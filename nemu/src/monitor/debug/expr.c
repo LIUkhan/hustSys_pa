@@ -244,7 +244,7 @@ uint32_t eval(uint32_t p,uint32_t q)
           sscanf(tokens[p].str,"0x%x",&val);
         else
           sscanf(tokens[p].str,"0x%xu",&val);
-      printf("%u\n",val);
+      // printf("%u\n",val);
       return val;
     }
     else if(tokens[p].type == TK_ONUM){
@@ -278,7 +278,9 @@ uint32_t eval(uint32_t p,uint32_t q)
   else if(tokens[p].type == DEREF)//处理取地址符
   {
     // printf("4");
-    return vaddr_read(eval(p+1,q),4);
+    uint32_t addr = eval(p+1,q);
+    printf("0x%08x\n",addr);
+    return vaddr_read(addr,4);
   }
   else {
     // printf("5");

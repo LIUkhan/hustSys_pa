@@ -100,7 +100,7 @@ static int cmd_x(char *args) {
       int n = atoi(arg1);
       uint32_t addr;
       sscanf(arg2,"%x",&addr);
-      printf("%x\n",addr);
+      printf("0x%08x\n",addr);
       for(int i = 0; i < n; i++)
       {
         printf("0x%08x\n",paddr_read(addr,4));
