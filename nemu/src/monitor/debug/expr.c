@@ -191,10 +191,10 @@ uint32_t expr(char *e, bool *success) {
   // TODO();
   //扫描token，分出取地址符
   for	(int i =	0; i < nr_token; i++)	{
-      if(tokens[i].type	== '*' && (i == 0	|| tokens[i - 1].type	==	'+' || tokens[i - 1].type	== '-' || tokens[i - 1].type == '/' || tokens[i - 1].type	== '*'\
-      || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND)) {
-          tokens[i].type	=	DEREF;
-      }
+    if(tokens[i].type	== '*' && (i == 0	|| tokens[i - 1].type	==	'+' || tokens[i - 1].type	== '-' || tokens[i - 1].type == '/' || tokens[i - 1].type	== '*'\
+    || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE)) {
+      tokens[i].type	=	DEREF;
+    }
   }
   for	(int i =	0; i < nr_token; i++)	{
       printf("%d ",tokens[i].type);
