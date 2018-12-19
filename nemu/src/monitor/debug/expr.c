@@ -305,9 +305,15 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-   
-    uint32_t val1 = eval(p,op-1);
-    uint32_t val2 = eval(op+1,q);
+    printf("mainop:%u\n",op);
+    uint32_t val0 = 0,val1 = 0,val2 = 1;
+    if(tokens[op].type == DEREF)
+      val0 = eval(op+1,q);
+    else
+    {
+      val1 = eval(p,op-1);
+      val2 = eval(op+1,q);
+    }
     // printf("\n%u %c %u :%u\n",val1,tokens[op].type,val2,op);
     switch(tokens[op].type)
     {
@@ -315,20 +321,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       case '-': return val1 - val2;
       case '*': return val1 * val2;
       case '/': return val1 / val2;
-      case DEREF: {
-        uint32_t temp_p = p +1;
-        uint32_t temp_q;
-        while(tokens[temp_p].type == TK_NOTYPE)
-          temp_p++;
-        temp_q = temp_p;
-        if(tokens[temp_p].type == TK_LP)
-        {
-          while(tokens[temp_q].type != TK_RP)
-            temp_q++;
-        }
-        uint32_t addr = eval(temp_p,temp_q);
-        return vaddr_read(addr,4);
-      }
+      case DEREF: return vaddr_read(val0,4);
       case TK_EQ: return (uint32_t)(val1 == val2);
       case TK_NEQ: return (uint32_t)(val1 != val2);
       case TK_AND: return (uint32_t)(val1 && val2);
@@ -340,6 +333,17 @@ uint32_t eval(uint32_t p,uint32_t q)
     }
   }
 }
+// uint32_t temp_p = p +1;
+// uint32_t temp_q;
+// while(tokens[temp_p].type == TK_NOTYPE)
+//   temp_p++;
+// temp_q = temp_p;
+// if(tokens[temp_p].type == TK_LP)
+// {
+//   while(tokens[temp_q].type != TK_RP)
+//     temp_q++;
+// }
+// uint32_t addr = eval(temp_p,temp_q);
 
 //检查满足BNF的括号表达式
 bool check_parentheses(uint32_t p,uint32_t q)
