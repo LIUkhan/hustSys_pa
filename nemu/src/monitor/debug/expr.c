@@ -196,9 +196,9 @@ uint32_t expr(char *e, bool *success) {
       tokens[i].type	=	DEREF;
     }
   }
-  for	(int i =	0; i < nr_token; i++)	{
-      printf("%d ",tokens[i].type);
-  }
+  // for	(int i =	0; i < nr_token; i++)	{
+  //     printf("%d ",tokens[i].type);
+  // }
   printf("\n");
   valid = true;
   uint32_t ret = eval(0,nr_token-1);
@@ -305,7 +305,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       return 0;
     }
     uint32_t op = findmainop(p,q);
-    printf("mainop:%u\n",op);
+    // printf("mainop:%u\n",op);
     uint32_t val0 = 0,val1 = 0,val2 = 1;
     if(tokens[op].type == DEREF)
       val0 = eval(op+1,q);
