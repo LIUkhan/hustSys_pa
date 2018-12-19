@@ -192,12 +192,36 @@ uint32_t expr(char *e, bool *success) {
   //扫描token，分出取地址符
   for	(int i =	0; i < nr_token; i++)	{
     if(tokens[i].type	== '*' && (i == 0	|| tokens[i - 1].type	==	'+' || tokens[i - 1].type	== '-' || tokens[i - 1].type == '/' || tokens[i - 1].type	== '*'\
-    || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE || tokens[i-1].type == TK_LP)) {
-      tokens[i].type	=	DEREF;
+    || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE || tokens[i-1].type == TK_LP\
+    || tokens[i - 1].type	== DEREF || tokens[i - 1].type == NEGTIVE)) {
+      if(tokens[i-1].type == TK_NOTYPE)
+      {
+        uint32_t temp = i-1;
+        while(tokens[temp].type == TK_NOTYPE)
+          temp--;
+        if(tokens[temp].type	==	'+' || tokens[temp].type	== '-' || tokens[temp].type == '/' || tokens[temp].type	== '*'\
+        || tokens[temp].type	==	TK_NEQ || tokens[temp].type	== TK_EQ || tokens[temp].type == TK_AND || tokens[temp].type == TK_LP\
+        || tokens[temp].type	== DEREF || tokens[temp].type == NEGTIVE)
+          tokens[i].type	=	DEREF;
+      }
+      else
+        tokens[i].type	=	DEREF;
     }
     if(tokens[i].type	== '-' && (i == 0	|| tokens[i - 1].type	==	'+' || tokens[i - 1].type	== '-' || tokens[i - 1].type == '/' || tokens[i - 1].type	== '*'\
-    || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE || tokens[i-1].type == TK_LP)) {
-      tokens[i].type	=	NEGTIVE;
+    || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE || tokens[i-1].type == TK_LP\
+    || tokens[i - 1].type	== DEREF || tokens[i - 1].type == NEGTIVE)) {
+      if(tokens[i-1].type == TK_NOTYPE)
+      {
+        uint32_t temp = i-1;
+        while(tokens[temp].type == TK_NOTYPE)
+          temp--;
+        if(tokens[temp].type	==	'+' || tokens[temp].type	== '-' || tokens[temp].type == '/' || tokens[temp].type	== '*'\
+        || tokens[temp].type	==	TK_NEQ || tokens[temp].type	== TK_EQ || tokens[temp].type == TK_AND || tokens[temp].type == TK_LP\
+        || tokens[temp].type	== DEREF || tokens[temp].type == NEGTIVE)
+          tokens[i].type	=	NEGTIVE;
+      }
+      else
+        tokens[i].type	=	NEGTIVE;
     }
   }
   
