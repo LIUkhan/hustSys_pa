@@ -295,23 +295,6 @@ uint32_t eval(uint32_t p,uint32_t q)
     // printf("3");
     return eval(p+1,q-1);
   }
-  else if(tokens[p].type == DEREF)//处理取地址符
-  {
-    // printf("4");
-    uint32_t temp_p = p +1;
-    uint32_t temp_q;
-    while(tokens[temp_p].type == TK_NOTYPE)
-      temp_p++;
-    temp_q = temp_p;
-    if(tokens[temp_p].type == TK_LP)
-    {
-      while(tokens[temp_q].type != TK_RP)
-        temp_q++;
-    }
-    uint32_t addr = eval(temp_p,temp_q);
-    // printf("0x%08x\n",addr);
-    return vaddr_read(addr,4);
-  }
   else {
     // printf("5");
     if(checklegal(p,q) == false)
@@ -332,6 +315,20 @@ uint32_t eval(uint32_t p,uint32_t q)
       case '-': return val1 - val2;
       case '*': return val1 * val2;
       case '/': return val1 / val2;
+      case DEREF: {
+        uint32_t temp_p = p +1;
+        uint32_t temp_q;
+        while(tokens[temp_p].type == TK_NOTYPE)
+          temp_p++;
+        temp_q = temp_p;
+        if(tokens[temp_p].type == TK_LP)
+        {
+          while(tokens[temp_q].type != TK_RP)
+            temp_q++;
+        }
+        uint32_t addr = eval(temp_p,temp_q);
+        return vaddr_read(addr,4);
+      }
       case TK_EQ: return (uint32_t)(val1 == val2);
       case TK_NEQ: return (uint32_t)(val1 != val2);
       case TK_AND: return (uint32_t)(val1 && val2);
@@ -390,6 +387,7 @@ uint32_t findmainop(uint32_t p,uint32_t q)
   uint32_t position = p;
   while(p < q)
   {
+    //除去括号中的
     if(tokens[p].type == TK_LP)
     {
       int lcount = 1; p++;
@@ -404,15 +402,15 @@ uint32_t findmainop(uint32_t p,uint32_t q)
         else
           p++;
       }//跳出while时指向匹配的右括号后的第一个字符
-    }
-    else if(tokens[p].type != TK_EQ && tokens[p].type != TK_NEQ && tokens[p].type != TK_AND && tokens[p].type != '+' && tokens[p].type != '-' && tokens[p].type != '*' && tokens[p].type != '/')
+    }//除去运算符之外的
+    else if(tokens[p].type != DEREF && tokens[p].type != TK_EQ && tokens[p].type != TK_NEQ && tokens[p].type != TK_AND && tokens[p].type != '+' && tokens[p].type != '-' && tokens[p].type != '*' && tokens[p].type != '/')
       p++;
-    else
+    else//确立优先级
     {
       if(!(((tokens[position].type == '+' || tokens[position].type == '-')\
-       && (tokens[p].type == '*' || tokens[p].type == '/')) ||  \
+       && (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == DEREF)) ||  \
       ( (tokens[position].type == TK_EQ || tokens[position].type == TK_NEQ || tokens[position].type == TK_AND) && \
-      (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == '+' || tokens[p].type == '-') ) ) )
+      (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == '+' || tokens[p].type == '-'|| tokens[p].type == DEREF) ) ) )
         position = p;
       p++;
     }
