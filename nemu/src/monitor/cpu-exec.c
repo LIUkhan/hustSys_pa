@@ -43,7 +43,10 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
     if(checkWP())
+    {
       nemu_state = NEMU_STOP;
+      return;
+    }
 
 #endif
 
