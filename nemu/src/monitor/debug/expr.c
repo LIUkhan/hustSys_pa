@@ -11,7 +11,7 @@ uint32_t findmainop(uint32_t,uint32_t);
 bool checklegal(uint32_t,uint32_t);
 uint32_t eval(uint32_t,uint32_t);
 enum {
-  TK_NOTYPE = 256, TK_LP, TK_RP, TK_HNUM, TK_ONUM, TK_REG, TK_EQ,TK_NEQ,TK_AND,DEREF
+  TK_NOTYPE = 256, TK_LP, TK_RP, TK_HNUM, TK_ONUM, TK_REG, TK_EQ,TK_NEQ,TK_AND,DEREF,NEGTIVE
 
   /* TODO: Add more token types */
 
@@ -195,7 +195,12 @@ uint32_t expr(char *e, bool *success) {
     || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE || tokens[i-1].type == TK_LP)) {
       tokens[i].type	=	DEREF;
     }
+    if(tokens[i].type	== '-' && (i == 0	|| tokens[i - 1].type	==	'+' || tokens[i - 1].type	== '-' || tokens[i - 1].type == '/' || tokens[i - 1].type	== '*'\
+    || tokens[i - 1].type	==	TK_NEQ || tokens[i - 1].type	== TK_EQ || tokens[i - 1].type == TK_AND || tokens[i-1].type == TK_NOTYPE || tokens[i-1].type == TK_LP)) {
+      tokens[i].type	=	NEGTIVE;
+    }
   }
+  
   // for	(int i =	0; i < nr_token; i++)	{
   //     printf("%d ",tokens[i].type);
   // }
@@ -309,6 +314,8 @@ uint32_t eval(uint32_t p,uint32_t q)
     uint32_t val0 = 0,val1 = 0,val2 = 1;
     if(tokens[op].type == DEREF)
       val0 = eval(op+1,q);
+    else if(tokens[op].type == NEGTIVE)
+      val0 = -eval(op+1,q);
     else
     {
       val1 = eval(p,op-1);
@@ -322,6 +329,7 @@ uint32_t eval(uint32_t p,uint32_t q)
       case '*': return val1 * val2;
       case '/': return val1 / val2;
       case DEREF: return vaddr_read(val0,4);
+      case NEGTIVE: return val0;
       case TK_EQ: return (uint32_t)(val1 == val2);
       case TK_NEQ: return (uint32_t)(val1 != val2);
       case TK_AND: return (uint32_t)(val1 && val2);
@@ -412,9 +420,9 @@ uint32_t findmainop(uint32_t p,uint32_t q)
     else//确立优先级
     {
       if(!(((tokens[position].type == '+' || tokens[position].type == '-')\
-       && (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == DEREF)) ||  \
+       && (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == DEREF || tokens[p].type == NEGTIVE)) ||  \
       ( (tokens[position].type == TK_EQ || tokens[position].type == TK_NEQ || tokens[position].type == TK_AND) && \
-      (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == '+' || tokens[p].type == '-'|| tokens[p].type == DEREF) ) ) )
+      (tokens[p].type == '*' || tokens[p].type == '/' || tokens[p].type == '+' || tokens[p].type == '-'|| tokens[p].type == DEREF || tokens[p].type == NEGTIVE) ) ) )
         position = p;
       p++;
     }
