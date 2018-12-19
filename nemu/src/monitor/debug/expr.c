@@ -298,7 +298,17 @@ uint32_t eval(uint32_t p,uint32_t q)
   else if(tokens[p].type == DEREF)//处理取地址符
   {
     // printf("4");
-    uint32_t addr = eval(p+1,q);
+    uint32_t temp_p = p +1;
+    uint32_t temp_q;
+    while(tokens[temp_p].type == TK_NOTYPE)
+      temp_p++;
+    temp_q = temp_p;
+    if(tokens[temp_p].type == TK_LP)
+    {
+      while(tokens[temp_q].type != TK_RP)
+        temp_q++;
+    }
+    uint32_t addr = eval(temp_p,temp_q);
     // printf("0x%08x\n",addr);
     return vaddr_read(addr,4);
   }
