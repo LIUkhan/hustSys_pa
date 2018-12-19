@@ -8,6 +8,8 @@
  */
 #define MAX_INSTR_TO_PRINT 10
 
+extern bool checkWP();
+
 int nemu_state = NEMU_STOP;
 
 void exec_wrapper(bool);
@@ -40,6 +42,11 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
+    if(checkWP())
+    {
+      nemu_state = NEMU_STOP;
+      return;
+    }
 
 #endif
 
