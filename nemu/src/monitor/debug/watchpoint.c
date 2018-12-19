@@ -82,14 +82,14 @@ void deleteWP(uint32_t n) {
 
 bool checkWP()
 {
-  printf("checkWP\n");
+  // printf("checkWP\n");
   bool change = false;
   bool success;
   WP* temp = head;
   while(temp != NULL) {
     uint32_t val = expr(temp->exprbuf,&success);
-    printf("%s\n",temp->exprbuf);
-    printf("%x %x\n",temp->value,val);
+    // printf("%s\n",temp->exprbuf);
+    // printf("%x %x\n",temp->value,val);
     if(temp->value != val)
     {
       printf("WatchPoint %u has changed!\n",temp->NO);
