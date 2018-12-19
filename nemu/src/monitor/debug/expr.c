@@ -330,7 +330,7 @@ uint32_t eval(uint32_t p,uint32_t q)
     {
       
       valid = false;
-      printf("Error:Too many parentheses!\n");
+      printf("Error:Illegal operation!\n");
       return 0;
     }
     uint32_t op = findmainop(p,q);
