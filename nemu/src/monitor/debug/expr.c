@@ -196,7 +196,10 @@ uint32_t expr(char *e, bool *success) {
           tokens[i].type	=	DEREF;
       }
   }
-
+  for	(int i =	0; i < nr_token; i++)	{
+      printf("%d ",tokens[i].type);
+  }
+  printf("\n");
   valid = true;
   uint32_t ret = eval(0,nr_token-1);
   // for(int i = 0; i < nr_token;i++)
