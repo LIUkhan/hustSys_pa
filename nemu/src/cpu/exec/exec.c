@@ -212,11 +212,12 @@ static make_EHelper(2byte_esc) {
   idex(eip, &opcode_table[opcode]);
 }
 
+//exec_real(eip)
 make_EHelper(real) {
-  uint32_t opcode = instr_fetch(eip, 1);
+  uint32_t opcode = instr_fetch(eip, 1);//取第一个字节为opcode
   decoding.opcode = opcode;
-  set_width(opcode_table[opcode].width);
-  idex(eip, &opcode_table[opcode]);
+  set_width(opcode_table[opcode].width);//查表，根据opcode设置宽度
+  idex(eip, &opcode_table[opcode]);//进一步译码和执行
 }
 
 static inline void update_eip(void) {

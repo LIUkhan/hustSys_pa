@@ -16,6 +16,9 @@ submit: clean
 setup:
 	STUID=$(STUID) STUNAME=$(STUNAME) bash setup.sh
 
+recover:
+	STUID=$(STUID) STUNAME=$(STUNAME) bash recover.sh
+
 count:
 	find ./nemu -name "*.[ch]" | xargs cat | grep -v "^\s$$" | wc -l
 
