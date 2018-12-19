@@ -16,4 +16,8 @@ submit: clean
 setup:
 	STUID=$(STUID) STUNAME=$(STUNAME) bash setup.sh
 
+count:
+	find ./nemu -name "*.[ch]" | xargs cat | grep -v "^\s$$" | wc -l
+
 .PHONY: default clean submit
+
