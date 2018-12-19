@@ -8,6 +8,12 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
+void exec_wrapper(bool);
+extern bool hasWP();
+extern void deleteWP(uint32_t);
+extern void outWPinfo();
+extern void setWP(char *);
+extern bool checkWP();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
@@ -17,7 +23,7 @@ char* rl_gets() {
     free(line_read);
     line_read = NULL;
   }
-
+  
   line_read = readline("(nemu) ");
 
   if (line_read && *line_read) {
@@ -36,6 +42,130 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+  if(args == NULL)
+    cpu_exec(1);
+  else {
+    char *argnum = strtok(args," ");
+    char *test = strtok(NULL," ");//检查有无多余参数
+    if(test == NULL) {
+      int cmdnum = atoi(argnum);
+      cpu_exec(cmdnum);
+    }
+    else
+      printf("Error:too many arguments\n");
+  }
+  return 0;
+}
+
+
+static int cmd_info(char *args) {
+  if(args == NULL) {
+    printf("Error:info instruction need an argument, r for register, w for watchpoint\n");
+  }
+  else {
+    char *arg = strtok(args," ");
+    char *test = strtok(NULL," ");//检查有无多余参数
+    if(test == NULL)
+    {
+      if(!strcmp(arg,"r")) {
+        for(int i = R_EAX; i <= R_EDI; i++) {
+          printf("%s:0x%08x\n",regsl[i],cpu.gpr[i]._32);
+        }
+      }
+      else if(!strcmp(arg,"w")) {
+        if(hasWP()) {
+          printf("Num   Expr                          Oldvalue  Value     \n");//6 20 10 10
+          outWPinfo();
+        }
+        else {
+          printf("No watchpoints\n");
+        }
+      }
+      else {
+        printf("Error:the argument should be w or r\n");
+      }
+    }
+    else
+      printf("Error:too many arguments\n");
+  } 
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  if(args == NULL) {
+    printf("Error: Instruction Format: x N EXPR,use help to learn more\n");
+    return 0;
+  }
+  else {
+    char *arg1 = strtok(args," ");
+    char *arg2 = strtok(NULL," ");
+    if(arg2 == NULL)
+    {
+      printf("Error: Instruction Format: x N EXPR,use help to learn more\n");
+      return 0;
+    }
+    char *test = strtok(NULL," ");//检查有无多余参数
+    if(test == NULL)
+    {
+      int n = atoi(arg1);
+      uint32_t addr;
+      sscanf(arg2,"%x",&addr);
+      printf("addr:0x%08x\n",addr);
+      for(int i = 0; i < n; i++)
+      {
+        printf("value:0x%08x\n",paddr_read(addr,4));
+        addr += 4;//addr加1，移动一个字节,0xXXXXXXXX中高位对应高地址
+      }
+    }
+    else
+      printf("Error:too many arguments\n");
+  }
+  return 0;
+}
+
+static int cmd_d(char *args)
+{
+  if(args == NULL) {
+    printf("Error: Instruction Format: d N,use help to learn more\n");
+    return 0;
+  }
+  char *arg1 = strtok(args," ");
+  char *test = strtok(NULL," ");
+  if(test == NULL)
+  {
+    uint32_t val;
+    sscanf(arg1,"%u",&val);
+    printf("%u\n",val);
+    deleteWP(val);
+  }
+  else
+    printf("Error:too many arguments\n");
+  return 0;
+}
+
+static int cmd_w(char *args)
+{
+  if(args == NULL) {
+    printf("Error: Instruction Format: w EXPR,use help to learn more\n");
+    return 0;
+  }
+  setWP(args);
+  return 0;
+}
+
+static int cmd_p(char *args) {
+  if(args == NULL) {
+    printf("Error: Instruction Format: p EXPR,use help to learn more\n");
+  }
+  else {
+    bool success;
+    uint32_t ret = expr(args,&success);
+    printf("result: %u (hex value:0x%08x)\n",ret,ret);
+  }
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -46,7 +176,12 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si","单步执行N条指令后暂停执行，N缺省为1",cmd_si},
+  { "info","打印程序状态，r为寄存器，w为监视点信息",cmd_info},
+  { "x","扫描内存，格式x N expr 求图expr的值，将结果作为起始内存地址，以16进制形式输出连续N个4字节",cmd_x},
+  { "p","p EXPR 求出表达式EXPR的值",cmd_p},
+  { "w", "w EXPR 当表达式EXPR的值发生变化时,	暂停程序执行",cmd_w},
+  { "d","d N 删除编号为N的监视点",cmd_d},
   /* TODO: Add more commands */
 
 };
@@ -61,7 +196,7 @@ static int cmd_help(char *args) {
   if (arg == NULL) {
     /* no argument given */
     for (i = 0; i < NR_CMD; i ++) {
-      printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
+      printf("%-4s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
   }
   else {
@@ -101,7 +236,7 @@ void ui_mainloop(int is_batch_mode) {
     extern void sdl_clear_event_queue(void);
     sdl_clear_event_queue();
 #endif
-
+    //在命令池里面比较是哪个命令,所有命令函数返回int，为了进行if的判断
     int i;
     for (i = 0; i < NR_CMD; i ++) {
       if (strcmp(cmd, cmd_table[i].name) == 0) {
