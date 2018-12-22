@@ -2,7 +2,7 @@
 #include "cpu/rtl.h"
 
 /* shared by all helper functions */
-DecodeInfo decoding;
+DecodeInfo decoding; //记录译码信息
 rtlreg_t t0, t1, t2, t3, at;
 
 void decoding_set_jmp(bool is_jmp) {
@@ -31,7 +31,7 @@ static inline make_DopHelper(I) {
  */
 /* sign immediate */
 static inline make_DopHelper(SI) {
-  assert(op->width == 1 || op->width == 4);
+  assert(op->width == 1 || op->width == 4);//只有opwidth为1字节和4字节可以进来
 
   op->type = OP_TYPE_IMM;
 
@@ -41,8 +41,15 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  TODO();
-
+  // TODO();
+  uint32_t offset = (4 - op->width) * 8;
+  if(op->width == 4)
+    op->simm = instr_fetch(eip,op->width);//call在取opcode时候fetch一次，跳过了opcode
+  else {
+    uint32_t simm = instr_fetch(eip,op->width);
+    int32_t temp = simm << offset;
+    op->simm = temp >> offset;
+  }
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -96,7 +103,7 @@ static inline void decode_op_rm(vaddr_t *eip, Operand *rm, bool load_rm_val, Ope
   read_ModR_M(eip, rm, load_rm_val, reg, load_reg_val);
 }
 
-/* Ob, Ov */
+/* Ob, Ov ： no modR/M byte */
 static inline make_DopHelper(O) {
   op->type = OP_TYPE_MEM;
   rtl_li(&op->addr, instr_fetch(eip, 4));
@@ -109,8 +116,8 @@ static inline make_DopHelper(O) {
 #endif
 }
 
-/* Eb <- Gb
- * Ev <- Gv
+/* Eb <- Gb  G:The reg field of the modR/M byte selects a general register
+ * Ev <- Gv  E:A modR/M byte follows the opcode and specifies the operand,E就是要算复杂偏移的情况
  */
 make_DHelper(G2E) {
   decode_op_rm(eip, id_dest, true, id_src, true);
@@ -186,6 +193,10 @@ make_DHelper(r) {
   decode_op_r(eip, id_dest, true);
 }
 
+make_DHelper(r_) {
+  decode_op_r(eip, id_dest, false);
+}
+
 make_DHelper(E) {
   decode_op_rm(eip, id_dest, true, NULL, false);
 }
@@ -204,11 +215,11 @@ make_DHelper(test_I) {
 }
 
 make_DHelper(SI2E) {
-  assert(id_dest->width == 2 || id_dest->width == 4);
-  decode_op_rm(eip, id_dest, true, NULL, false);
+  assert(id_dest->width == 2 || id_dest->width == 4);//至少16位
+  decode_op_rm(eip, id_dest, true, NULL, false);//取出地址
   id_src->width = 1;
-  decode_op_SI(eip, id_src, true);
-  if (id_dest->width == 2) {
+  decode_op_SI(eip, id_src, true);//取出1字节的数字,并符号扩展为32位的
+  if (id_dest->width == 2) {      //如果为两个字节，就
     id_src->val &= 0xffff;
   }
 }
@@ -282,7 +293,7 @@ make_DHelper(a2O) {
 make_DHelper(J) {
   decode_op_SI(eip, id_dest, false);
   // the target address can be computed in the decode stage
-  decoding.jmp_eip = id_dest->simm + *eip;
+  decoding.jmp_eip = id_dest->simm + *eip;//此时eip已经指向了下一条指令
 }
 
 make_DHelper(push_SI) {

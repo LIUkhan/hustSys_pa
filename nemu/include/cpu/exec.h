@@ -11,13 +11,13 @@ typedef void (*EHelper) (vaddr_t *);
 static inline uint32_t instr_fetch(vaddr_t *eip, int len) {
   uint32_t instr = vaddr_read(*eip, len);
 #ifdef DEBUG
-  uint8_t *p_instr = (void *)&instr;
+  uint8_t *p_instr = (void *)&instr;//为了一个字节一个字节写入设置的
   int i;
   for (i = 0; i < len; i ++) {
-    decoding.p += sprintf(decoding.p, "%02x ", p_instr[i]);
+    decoding.p += sprintf(decoding.p, "%02x ", p_instr[i]);//指令代码写入p
   }
 #endif
-  (*eip) += len;
+  (*eip) += len; //更新eip
   return instr;
 }
 

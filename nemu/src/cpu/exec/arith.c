@@ -7,8 +7,19 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  TODO();
-
+  rtlreg_t result;
+  rtlreg_t CF_c, OF_c, relation, s_op;
+  //减法，更新SF和ZF
+	rtl_sub(&result, &(id_dest->val), &id_src->val);
+	rtl_update_ZFSF(&result);
+	//如果被减数小于减数,无符号的小于判断,无符号只需要考虑一种状况
+	rtl_setrelop(RELOP_LTU, &CF_c, &(id_dest->val), &(id_src->val));
+	rtl_set_CF(&CF_c);
+	//有符号的小于的判断，设置OF.利用的是同符号减法才有可能溢出，利用小于号囊括两种同符号的情况
+	rtl_setrelop(RELOP_LT, &relation, &(id_dest->val), &(id_src->val));
+	rtl_msb(&s_op, &result, id_dest->width);
+	rtl_xor(&OF_c, &relation, &s_op);
+  rtl_set_OF(&OF_c);
   print_asm_template2(sub);
 }
 
@@ -43,7 +54,7 @@ make_EHelper(adc) {
   rtl_add(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
 
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t2);
 
   rtl_setrelop(RELOP_LTU, &t0, &t2, &id_dest->val);
   rtl_or(&t0, &t3, &t0);
@@ -66,7 +77,7 @@ make_EHelper(sbb) {
   rtl_sub(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
 
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_update_ZFSF(&t2);
 
   rtl_setrelop(RELOP_LTU, &t0, &id_dest->val, &t2);
   rtl_or(&t0, &t3, &t0);

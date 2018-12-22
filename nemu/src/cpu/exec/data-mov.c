@@ -6,14 +6,14 @@ make_EHelper(mov) {
 }
 
 make_EHelper(push) {
-  TODO();
-
+  rtl_push(&(id_dest->val));
   print_asm_template1(push);
 }
-
+//有可能pop到reg，也有可能pop到memory
 make_EHelper(pop) {
-  TODO();
-
+  rtlreg_t temp;
+  rtl_pop(&temp);
+  operand_write(id_dest, &temp);
   print_asm_template1(pop);
 }
 
