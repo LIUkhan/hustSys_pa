@@ -250,14 +250,14 @@ make_EHelper(idiv) {
   print_asm_template1(idiv);
 }
 
-// make_EHelper(xchg)
-// {
-//   rtlreg_t temp;
-//   rtl_lr(&temp,id_dest->reg,id_dest->width);
-//   rtl_sr(id_dest->reg,&(cpu.eax),id_dest->width);
-//   rtl_sr(0,&temp,id_dest->width);
-//   print_asm_template1(xchg);
-// }
+make_EHelper(xchg)
+{
+  rtlreg_t temp;
+  rtl_lr(&temp,id_dest->reg,id_dest->width);
+  rtl_sr(id_dest->reg,&(cpu.eax),id_dest->width);
+  rtl_sr(0,&temp,id_dest->width);
+  print_asm_template1(xchg);
+}
 
 // make_EHelper(setz)
 // {
