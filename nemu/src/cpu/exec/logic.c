@@ -31,8 +31,10 @@ make_EHelper(xor) {
 }
 
 make_EHelper(or) {
-  TODO();
-
+  // TODO();
+  rtlreg_t res;
+  rtl_or(&res,&(id_dest->val),&(id_src->val));
+  operand_write(id_dest, &res);
   print_asm_template2(or);
 }
 
