@@ -14,9 +14,10 @@ make_EHelper(test) {
 make_EHelper(and) {
   // TODO();
   rtlreg_t res;
+  rtlreg_t s0 = 0;
   rtl_and(&res,&(id_dest->val),&(id_src->val));
-  rtl_set_CF(0);
-  rtl_set_OF(0);
+  rtl_set_CF(&s0);
+  rtl_set_OF(&s0);
   operand_write(id_dest,&res);
   rtl_update_ZFSF(&res);
   print_asm_template2(and);
