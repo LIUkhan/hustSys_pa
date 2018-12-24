@@ -202,6 +202,7 @@ make_DHelper(E) {
 }
 
 make_DHelper(setcc_E) {
+  printf("sdfasdfsf\n");
   decode_op_rm(eip, id_dest, false, NULL, false);
 }
 
