@@ -71,5 +71,25 @@ void difftest_step(uint32_t eip) {
 
   // TODO: Check the registers state with the reference design.
   // Set `nemu_state` to `NEMU_ABORT` if they are not the same.
-  TODO();
+  // TODO();
+  bool status = true;
+  for(int i = 0; i < 8; i++)
+  {
+    uint32_t dvalue = cpu.gpr[i]._32;
+		uint32_t ref = ref_r.gpr[i]._32;
+    if(dvalue != ref)
+      status = false;
+  }
+  if(ref_r.eip != cpu.eip)
+    status = false;
+  //输出信息,并且abort
+  if (!status) {
+		for (int i = 0; i < 8; ++i) {
+			uint32_t dvalue = cpu.gpr[i]._32;
+			uint32_t ref = ref_r.gpr[i]._32;
+			printf("%s: nemu:0x%08x qemu:0x%08x\n",regsl[i],dvalue,ref);
+		}
+		printf("%s: nemu:0x%08x qemu:0x%08x\n", "eip", cpu.eip, ref_r.eip);
+		nemu_state = NEMU_ABORT;
+	}
 }

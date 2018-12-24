@@ -30,8 +30,9 @@ make_EHelper(popa) {
 }
 
 make_EHelper(leave) {
-  TODO();
-
+  // TODO();
+  rtl_mv(&cpu.esp, &cpu.ebp);
+  rtl_pop(&cpu.ebp);
   print_asm("leave");
 }
 
@@ -63,7 +64,7 @@ make_EHelper(movsx) {
   operand_write(id_dest, &t0);
   print_asm_template2(movsx);
 }
-
+//读出来设置了width为1或2，使用时应该改width，使得其扩展为16/32位的无符号数
 make_EHelper(movzx) {
   id_dest->width = decoding.is_operand_size_16 ? 2 : 4;
   operand_write(id_dest, &id_src->val);

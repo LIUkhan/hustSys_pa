@@ -2,8 +2,12 @@
 #include "cpu/cc.h"
 
 make_EHelper(test) {
-  TODO();
-
+  // TODO();
+  rtlreg_t s0 = 0;
+  rtlreg_t res = id_dest->val & id_src->val;
+  rtl_set_CF(&s0);
+  rtl_set_OF(&s0);
+  rtl_update_ZFSF(&res);
   print_asm_template2(test);
 }
 

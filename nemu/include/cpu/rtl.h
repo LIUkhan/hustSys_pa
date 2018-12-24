@@ -119,7 +119,7 @@ static inline void interpret_rtl_jr(rtlreg_t *target) {
 }
 //有条件跳转
 static inline void interpret_rtl_jrelop(uint32_t relop,
-    const rtlreg_t *src1, const rtlreg_t *src2, vaddr_t target) {
+  const rtlreg_t *src1, const rtlreg_t *src2, vaddr_t target) {
   bool is_jmp = interpret_relop(relop, *src1, *src2);
   if (is_jmp) cpu.eip = target;
   decoding_set_jmp(is_jmp);
