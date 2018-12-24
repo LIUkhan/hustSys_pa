@@ -22,3 +22,4 @@ make_EHelper(test);
 make_EHelper(jmp);
 make_EHelper(movzx);
 make_EHelper(movsx);
+make_EHelper(and);
