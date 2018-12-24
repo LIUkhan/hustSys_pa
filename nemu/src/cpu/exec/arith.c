@@ -259,10 +259,10 @@ make_EHelper(xchg)
   print_asm_template1(xchg);
 }
 
-make_EHelper(setz)
-{
-  rtlreg_t temp;
-  rtl_get_ZF(&temp);
-  operand_write(id_dest,&temp);
-  print_asm_template1(setz);
-}
+// make_EHelper(setz)
+// {
+//   rtlreg_t temp;
+//   rtl_get_ZF(&temp);
+//   operand_write(id_dest,&temp);
+//   print_asm_template1(setz);
+// }
