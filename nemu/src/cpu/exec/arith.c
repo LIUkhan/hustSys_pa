@@ -8,10 +8,11 @@ make_EHelper(add) {
   //无符号，结果小于加数
   rtl_setrelop(RELOP_LTU, &CF_c, &res, &(id_src->val));
 	rtl_set_CF(&CF_c);
-	//有符号的小于的判断，设置OF.同符号加法才有可能溢出，利用小于号囊括两种同符号的情况
+	//有符号的小于的判断，设置OF.同符号加法才有可能溢出
 	rtl_xor(&s1,&res,&(id_dest->val));
   rtl_xor(&s2,&res,&(id_src->val));
   rtl_and(&OF_c,&s1,&s2);
+  rtl_msb(&OF_c, &OF_c, id_dest->width);
   rtl_set_OF(&OF_c);
   operand_write(id_dest,&res);
   print_asm_template2(add);
@@ -54,20 +55,49 @@ make_EHelper(cmp) {
 }
 
 make_EHelper(inc) {
-  TODO();
-
+  // TODO();
+  rtlreg_t res,val,s1,s2,OF_c;
+  rtl_li(&val,1);
+  rtl_add(&res,&(id_dest->val),&val);
+  rtl_update_ZFSF(&res);
+	rtl_xor(&s1,&res,&(id_dest->val));
+  rtl_xor(&s2,&res,&val);
+  rtl_and(&OF_c,&s1,&s2);
+  rtl_msb(&OF_c, &OF_c, id_dest->width);
+  rtl_set_OF(&OF_c);
+  operand_write(id_dest,&res);
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
-  TODO();
-
+  // TODO();
+  rtlreg_t res,val,s_op,OF_c,relation;
+  rtl_li(&val,1);
+  rtl_sub(&res,&(id_dest->val),&val);
+  rtl_update_ZFSF(&res);
+	//有符号的小于的判断，设置OF.1　< 2,为真１，如果结果为正０，溢出，反之依然
+	rtl_setrelop(RELOP_LT, &relation, &(id_dest->val), &val);
+	rtl_msb(&s_op, &res, id_dest->width);
+	rtl_xor(&OF_c, &relation, &s_op);
+  rtl_set_OF(&OF_c);
+  operand_write(id_dest,&res);
   print_asm_template1(dec);
 }
 
 make_EHelper(neg) {
-  TODO();
-
+  // TODO();
+  rtlreg_t setcf,setof,s0,res,negop;
+  rtl_li(&s0,0);
+  rtl_li(&negop,-1);
+  rtl_setrelop(RELOP_NE,&setcf,&(id_dest->val),&s0);
+  rtl_set_CF(&setcf);
+  rtl_imul_lo(&res,&(id_dest->val),&negop);
+  rtl_update_ZFSF(&res);
+  rtl_setrelop(RELOP_EQ, &setof, &(id_dest->val),&res);
+  //不为０，且取反为自身，则溢出
+  rtl_and(&setof,&setof,&setcf);
+  rtl_set_OF(&setof);
+  operand_write(id_dest,&res);
   print_asm_template1(neg);
 }
 
