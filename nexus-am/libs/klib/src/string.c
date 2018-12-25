@@ -25,16 +25,13 @@ char *strcpy(char* dst,const char* src) {
 }
 
 char* strncpy(char* dst, const char* src, size_t n) {
-  size_t index = 0;
   if(dst == NULL || src == NULL)
     return NULL;
-  while(n)
+  for(int i = 0; i < n; i++)
   {
-    dst[index] = src[index];
-    index++;
-    n--;
+    dst[i] = src[i];
   }
-  dst[index] = '\0';
+  dst[n] = '\0';
   return dst;
 }
 
@@ -47,20 +44,31 @@ char* strcat(char* dst, const char* src) {
 }
 
 int strcmp(const char* s1, const char* s2) {
-  size_t index = 0;
-  while(s1[index] == s2[index])
-    index++;
-  return s1[index] - s2[index];
+  size_t n1 = strlen(s1);
+  size_t n2 = strlen(s2);
+  size_t n = n1 > n2 ? n2 : n1;
+  for(int i = 0; i < n; i++) {
+    if(s1[i] == s2[i])
+      continue;
+    else
+      return s1[i] - s2[i];
+  }
+  if(n1 > n2)
+    return (int)s1[n2];
+  else if(n1 < n2)
+    return (int)s2[n1];
+  else
+    return 0;
 }
 
 int strncmp(const char* s1, const char* s2, size_t n) {
-  size_t index = 0;
-  while(n && s1[index] == s2[index])
-  {
-    index++;
-    n--;
+  for(int i = 0; i < n; i++) {
+    if(s1[i] == s2[i])
+      continue;
+    else
+      return s1[i] - s2[i];
   }
-  return s1[index] - s2[index];
+  return 0;
 }
 //按字节设置
 void* memset(void* v,int c,size_t n) {
@@ -84,7 +92,7 @@ void* memcpy(void* out, const void* in, size_t n) {
 int memcmp(const void* s1, const void* s2, size_t n){
   const char* cleft = (const char*)s1;
   const char* cright = (const char*)s2;
-  for(int i = 0; i < n; ++i) {
+  for(int i = 0; i < n; i++) {
     if(cleft[i] == cright[i])
       continue;
     else
