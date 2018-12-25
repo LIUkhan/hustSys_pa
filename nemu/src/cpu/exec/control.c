@@ -49,15 +49,13 @@ make_EHelper(ret) {
 
 make_EHelper(call_rm) {
   // TODO();
-  rtlreg_t seq_eip,indirect,addr;
-  rtl_li(&addr, id_dest->val);
+  rtlreg_t seq_eip,addr;
+  rtl_mv(&addr, &(id_dest->val));
   rtl_li(&seq_eip, decoding.seq_eip);
   rtl_push(&seq_eip);
-  rtl_lm(&indirect,&addr,id_dest->width);
-  decoding.jmp_eip = indirect + *eip;
   if(decoding.is_operand_size_16){
   	decoding.jmp_eip &= 0xffff;
   }
-  rtl_j(decoding.jmp_eip);
+  rtl_jr(&addr);
   print_asm("call *%s", id_dest->str);
 }
