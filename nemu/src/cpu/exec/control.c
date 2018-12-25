@@ -53,9 +53,6 @@ make_EHelper(call_rm) {
   rtl_mv(&addr, &(id_dest->val));
   rtl_li(&seq_eip, decoding.seq_eip);
   rtl_push(&seq_eip);
-  if(decoding.is_operand_size_16){
-  	decoding.jmp_eip &= 0xffff;
-  }
   rtl_jr(&addr);
   print_asm("call *%s", id_dest->str);
 }

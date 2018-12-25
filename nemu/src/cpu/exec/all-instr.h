@@ -43,3 +43,4 @@ make_EHelper(imul2);
 make_EHelper(cltd);
 make_EHelper(cwtl);
 make_EHelper(sbb);
+make_EHelper(jmp_rm);
