@@ -76,7 +76,7 @@ make_EHelper(cltd) {
     }
     else {
       rtl_li(&immreg,0);
-      rtl_sr(R_EDX,&immreg,0);
+      rtl_sr(R_EDX,&immreg,4);
     }
   }
 
