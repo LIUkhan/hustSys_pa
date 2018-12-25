@@ -47,11 +47,11 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
       break;
     }
     case CC_LE: {
-      break;
       rtl_get_ZF(&temp);
       rtl_get_SF(&temp1);
       rtl_get_OF(&temp2);
       *dest = (temp == 1 || (temp1 != temp2)) ? 1 : 0;
+      break;
     }
       // TODO();
     default: panic("should not reach here");
