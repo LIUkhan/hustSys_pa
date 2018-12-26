@@ -9,7 +9,7 @@ void i2a(int num,int nindex,char *out)
   while(low != 0)
   {
     out[nindex++] = 48 + low;
-    num/=10;
+    num /= 10;
     low = num%10;
   }
   out[nindex] = '\0';
@@ -41,7 +41,8 @@ int printf(const char *fmt, ...) {
 
 
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  int len = strlen(fmt),index = strlen(out);
+  int len = strlen(fmt),index = 0;
+  out[0] = '\0';
   for(int i = 0; i < len; i++) {
     if(fmt[i] == '%')
     {
@@ -77,6 +78,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
         }
         default:{
+          i++;
           break;
         }
       }
