@@ -104,7 +104,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     if(fmt[i] == '%')
     {
       info form;
-      recognize(out,index,&form);
+      recognize(out,i+1,&form);
       switch(form.iden)
       {
         case 's':{
@@ -173,10 +173,7 @@ int sprintf(char *out, const char *fmt, ...) {
   int cnt;
   va_start(ap,fmt);
   cnt = vsprintf(out,fmt,ap);
-  int len = strlen(out);
-  for(int i = 0; i < len; i++) {
-    _putc(out[i]);
-  }
+  _puts(out);
   _putc('\n');
   va_end(ap);
   return cnt;
