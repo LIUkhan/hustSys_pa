@@ -69,8 +69,8 @@ void uori2a(int num,int nindex,char *out,int *index,info form,int isunsigned)
       while(unum != 0)
       {
         numbuf[i++] = 48 + low;
-        unum /= 10u;
-        low = unum%10u;
+        unum /= 10;
+        low = unum%10;
       }  
     }
   }
@@ -125,7 +125,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         case 's':{
           char *str = va_arg(ap,char *);
           uint32_t lenstr = strlen(str);
-          char tempstr[65536];
+          char tempstr[2000];
           if(lenstr < form.width)
           {
             int subres = form.width - lenstr;
