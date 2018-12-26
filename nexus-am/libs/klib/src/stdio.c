@@ -47,6 +47,11 @@ void uori2a(int num,int nindex,char *out,int *index,info form,int isunsigned)
   int i = 0,len;
   char numbuf[2000];
   if(!isunsigned) {
+    int addsign = 0;
+    if(num < 0) {
+      addsign = 1;
+      num *= -1;
+    }
     int low = num%10;
     if(num == 0)
       numbuf[i++] = 48;
@@ -58,6 +63,8 @@ void uori2a(int num,int nindex,char *out,int *index,info form,int isunsigned)
         low = num%10;
       }  
     }
+    if(addsign)
+      numbuf[i++] = '-';
   }
   else
   {
@@ -195,7 +202,7 @@ int sprintf(char *out, const char *fmt, ...) {
   int cnt;
   va_start(ap,fmt);
   cnt = vsprintf(out,fmt,ap);
-  // _puts(out);
+  _puts(out);
   va_end(ap);
   return cnt;
 }
