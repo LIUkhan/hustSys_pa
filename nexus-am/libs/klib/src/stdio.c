@@ -173,6 +173,11 @@ int sprintf(char *out, const char *fmt, ...) {
   int cnt;
   va_start(ap,fmt);
   cnt = vsprintf(out,fmt,ap);
+  int len = strlen(out);
+  for(int i = 0; i < len; i++) {
+    _putc(out[i]);
+  }
+  _putc('\n');
   va_end(ap);
   return cnt;
 }
