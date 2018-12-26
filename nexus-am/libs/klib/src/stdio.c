@@ -143,7 +143,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           if(out != NULL)
             strcat(out,tempstr);
           else {
-            _puts(str);
+            _puts(tempstr);
             index += strlen(tempstr);
           }
           i+=form.step;//离开’ｓ‘
