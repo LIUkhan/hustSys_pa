@@ -195,7 +195,7 @@ int sprintf(char *out, const char *fmt, ...) {
   int cnt;
   va_start(ap,fmt);
   cnt = vsprintf(out,fmt,ap);
-  _puts(out);
+  // _puts(out);
   va_end(ap);
   return cnt;
 }
