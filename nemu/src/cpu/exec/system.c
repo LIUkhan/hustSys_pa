@@ -8,6 +8,8 @@ extern uint32_t pio_read_l(ioaddr_t);
 extern void pio_write_b(ioaddr_t, uint32_t);
 extern void pio_write_w(ioaddr_t, uint32_t);
 extern void pio_write_l(ioaddr_t, uint32_t);
+
+
 make_EHelper(lidt) {
   TODO();
 

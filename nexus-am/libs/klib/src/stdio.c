@@ -3,7 +3,15 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
-void i2a(int num,int nindex,char *out)
+void _puts(char *str)
+{
+  int len = strlen(str);
+  for(int i = 0; i < len; i++) {
+    _putc(str[i]);
+  }
+}
+
+void i2a(int num,int nindex,char *out,int *index)
 {
   int i = 0,len;
   char numbuf[2000];
@@ -20,13 +28,22 @@ void i2a(int num,int nindex,char *out)
   }
   numbuf[i] = '\0';
   len = strlen(numbuf);
-  for(int j = len-1; j >= 0; j--)
-    out[nindex++] = numbuf[j];
-  out[nindex] = '\0';
+  if(out == NULL)
+  {
+    for(int j = len-1; j >= 0; j--)
+      _putc(numbuf[j]);
+    *index+=strlen(numbuf);
+  }
+  else
+  {
+    for(int j = len-1; j >= 0; j--)
+      out[nindex++] = numbuf[j];
+    out[nindex] = '\0';
+  }
   return;
 }
 
-void u2a(uint32_t num,int nindex,char *out)
+void u2a(uint32_t num,int nindex,char *out,int *index)
 {
   int i = 0,len;
   char numbuf[2000];
@@ -43,28 +60,36 @@ void u2a(uint32_t num,int nindex,char *out)
   }
   numbuf[i] = '\0';
   len = strlen(numbuf);
-  for(int j = len-1; j >= 0; j--)
-    out[nindex++] = numbuf[j];
-  out[nindex] = '\0';
+  if(out == NULL)
+  {
+    for(int j = len-1; j >= 0; j--)
+      _putc(numbuf[j]);
+    *index+=strlen(numbuf);
+  }
+  else
+  {
+    for(int j = len-1; j >= 0; j--)
+      out[nindex++] = numbuf[j];
+    out[nindex] = '\0';
+  }
   return;
 }
 
 int printf(const char *fmt, ...) {
-  // va_list ap;
-  // int cnt;
-  // va_start(ap,fmt);
-  // cnt = vprintf(fmt,ap);
-  // va_end(ap);
-  return 0;
+  va_list ap;
+  int cnt;
+  va_start(ap,fmt);
+  cnt = vsprintf(NULL,fmt,ap);
+  va_end(ap);
+  return cnt;
 }
 
 
-
+//out为NULL时用_putc输出
 int vsprintf(char *out, const char *fmt, va_list ap) {
-  if(out == NULL)
-    return -1;
   int len = strlen(fmt),index = 0;
-  out[0] = '\0';
+  if(out != NULL)
+    out[0] = '\0';
   for(int i = 0; i < len; i++) {
     if(fmt[i] == '%')
     {
@@ -73,21 +98,26 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       {
         case 's':{
           char *str = va_arg(ap,char *);
-          strcat(out,str);
+          if(out != NULL)
+            strcat(out,str);
+          else {
+            _puts(str);
+            index+=strlen(str);
+          }
           i+=2;//离开’ｓ‘
           break;
         }
         case 'd':{
           int num = va_arg(ap,int);
           int nindex = strlen(out);
-          i2a(num,nindex,out);
+          i2a(num,nindex,out,&index);
           i+=2;
           break;
         }
         case 'u':{
           uint32_t num = (uint32_t)va_arg(ap,int);
           int nindex = strlen(out);
-          u2a(num,nindex,out);
+          u2a(num,nindex,out,&index);
           i+=2;
           break;
         }
@@ -96,13 +126,22 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         }
       }
     }
-    index = strlen(out);
-    if(i >= len) {
+    if(out != NULL)
+    {
+      index = strlen(out);
+      if(i >= len) {
+        out[index] = '\0';
+        break;
+      }
+      out[index++] = fmt[i];
       out[index] = '\0';
-      break;
     }
-    out[index++] = fmt[i];
-    out[index] = '\0';
+    else {
+      if(i >= len) 
+        break;
+      _putc(fmt[i]);
+      index++;
+    }
   };
   return index;
 }
