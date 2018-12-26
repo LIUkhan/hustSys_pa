@@ -3,6 +3,36 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+typedef struct info{
+  uint32_t addzero;
+  uint32_t width;
+  uint32_t precise;
+  char iden;
+  uint32_t step;
+}info;
+
+void recognize(char *out,int index,info *r)
+{
+  r->addzero = 0;
+  r->width = 0;//0不限制长度
+  r->precise = 6;
+  r->step = 2;//默认跳过标识符和％
+  if(out[index] == '0')
+  {
+    r->addzero = 1;
+    index++;
+    r->step++;
+  }
+  while(out[index] >= '1' && out[index] <= '9')
+  {
+    r->width += r->width *10 + out[index]-48;
+    index++;  r->step++;
+  }
+  if(out[index] >= 'a' && out[index] <= 'z')
+    r->iden = out[index++];
+  return;
+}
+
 void _puts(char *str)
 {
   int len = strlen(str);
@@ -11,7 +41,8 @@ void _puts(char *str)
   }
 }
 
-void i2a(int num,int nindex,char *out,int *index)
+
+void i2a(int num,int nindex,char *out,int *index,info form)
 {
   int i = 0,len;
   char numbuf[2000];
@@ -28,38 +59,17 @@ void i2a(int num,int nindex,char *out,int *index)
   }
   numbuf[i] = '\0';
   len = strlen(numbuf);
-  if(out == NULL)
+  if(len < form.width)
   {
-    for(int j = len-1; j >= 0; j--)
-      _putc(numbuf[j]);
-    *index+=strlen(numbuf);
+    int subres = form.width - len;
+    if(form.addzero)
+      for(int j = 0; j < subres; j++)
+        numbuf[len+j] = '0';
+    else
+      for(int j = 0; j < subres; j++)
+        numbuf[len+j] = ' ';
+    numbuf[len+subres] = '\0';
   }
-  else
-  {
-    for(int j = len-1; j >= 0; j--)
-      out[nindex++] = numbuf[j];
-    out[nindex] = '\0';
-  }
-  return;
-}
-
-void u2a(uint32_t num,int nindex,char *out,int *index)
-{
-  int i = 0,len;
-  char numbuf[2000];
-  uint32_t low = num%10;
-  if(num == 0)
-    numbuf[i++] = 48;
-  else{
-    while(num != 0)
-    {
-      numbuf[i++] = 48 + low;
-      num /= 10;
-      low = num%10;
-    }  
-  }
-  numbuf[i] = '\0';
-  len = strlen(numbuf);
   if(out == NULL)
   {
     for(int j = len-1; j >= 0; j--)
@@ -93,32 +103,42 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
   for(int i = 0; i < len; i++) {
     if(fmt[i] == '%')
     {
-      char c = fmt[i+1];
-      switch(c)
+      info form;
+      recognize(out,index,&form);
+      switch(form.iden)
       {
         case 's':{
           char *str = va_arg(ap,char *);
+          uint32_t lenstr = strlen(str);
+          char tempstr[65536];
+          if(lenstr < form.width)
+          {
+            int subres = form.width - lenstr;
+            if(form.addzero)
+              for(int j = 0; j < subres; j++)
+                tempstr[j] = '0';
+            else
+              for(int j = 0; j < subres; j++)
+                tempstr[j] = ' ';
+            tempstr[subres] = '\0';
+            strcat(tempstr,str);
+          }
+          else
+            strcpy(tempstr,str);
           if(out != NULL)
-            strcat(out,str);
+            strcat(out,tempstr);
           else {
             _puts(str);
-            index+=strlen(str);
+            index += strlen(tempstr);
           }
-          i+=2;//离开’ｓ‘
+          i+=form.step;//离开’ｓ‘
           break;
         }
         case 'd':{
           int num = va_arg(ap,int);
           int nindex = strlen(out);
-          i2a(num,nindex,out,&index);
-          i+=2;
-          break;
-        }
-        case 'u':{
-          uint32_t num = (uint32_t)va_arg(ap,int);
-          int nindex = strlen(out);
-          u2a(num,nindex,out,&index);
-          i+=2;
+          i2a(num,nindex,out,&index,form);
+          i+=form.step;
           break;
         }
         default:{
