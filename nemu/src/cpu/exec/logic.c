@@ -69,6 +69,7 @@ make_EHelper(rol) {
     rtl_xor(&OF_c,&sign,&newsign);
     rtl_set_OF(&OF_c);
   }
+  operand_write(id_dest, &(id_dest->val));
   print_asm_template2(rol);
 }
 
