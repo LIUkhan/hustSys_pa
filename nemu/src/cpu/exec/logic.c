@@ -48,8 +48,9 @@ make_EHelper(or) {
 make_EHelper(sar) {
   // TODO();
   // unnecessary to update CF and OF in NEMU
-  rtlreg_t res;
-  rtl_sar(&res,&(id_dest->val),&(id_src->val));
+  rtlreg_t res,s_dest;//需要对要扩展的数按照实际宽度做符号扩展
+  rtl_sext(&s_dest,&(id_dest->val),id_dest->width);
+  rtl_sar(&res,&s_dest,&(id_src->val));
   operand_write(id_dest,&res);
   rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(sar);
