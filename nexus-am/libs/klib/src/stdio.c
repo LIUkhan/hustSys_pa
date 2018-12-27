@@ -41,12 +41,35 @@ void _puts(char *str)
   }
 }
 
+char hexnum(uint32_t num)
+{
+  switch(num)
+  {
+    case 0: return '0';
+    case 1: return '1';
+    case 2: return '2';
+    case 3: return '3';
+    case 4: return '4';
+    case 5: return '5';
+    case 6: return '6';
+    case 7: return '7';
+    case 8: return '8';
+    case 9: return '9';
+    case 10: return 'a';
+    case 11: return 'b';
+    case 12: return 'c';
+    case 13: return 'd';
+    case 14: return 'e';
+    case 15: return 'f';
+    default:  assert(0);
+  }
+}
 
-void uori2a(int num,int nindex,char *out,int *index,info form,int isunsigned)
+void uori2a(int num,int nindex,char *out,int *index,info form,int type)
 {
   int i = 0,len;
   char numbuf[2000];
-  if(!isunsigned) {
+  if(type == 0) {
     int addsign = 0;
     if(num < 0) {
       addsign = 1;
@@ -66,7 +89,7 @@ void uori2a(int num,int nindex,char *out,int *index,info form,int isunsigned)
     if(addsign)
       numbuf[i++] = '-';
   }
-  else
+  else if(type == 1)
   {
     uint32_t unum = (uint32_t)num;
     uint32_t low = unum%10;
@@ -78,6 +101,23 @@ void uori2a(int num,int nindex,char *out,int *index,info form,int isunsigned)
         numbuf[i++] = 48 + low;
         unum /= 10;
         low = unum%10;
+      }  
+    }
+  }
+  else if(type == 2)
+  {
+    uint32_t unum = (uint32_t)num;
+    uint32_t low = unum%16;
+    char cw = hexnum(low);
+    if(unum == 0)
+      numbuf[i++] = cw;
+    else{
+      while(unum != 0)
+      {
+        numbuf[i++] = cw;
+        unum /= 16;
+        low = unum%16;
+        cw = hexnum(low);
       }  
     }
   }
@@ -127,12 +167,12 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     {
       info form;
       recognize(fmt,i+1,&form);
+      char tempstr[2000];
       switch(form.iden)
       {
         case 's':{
           char *str = va_arg(ap,char *);
           uint32_t lenstr = strlen(str);
-          char tempstr[2000];
           if(lenstr < form.width)
           {
             int subres = form.width - lenstr;
@@ -170,6 +210,41 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           i+=form.step;
           break;
         }
+        case 'x': {
+          int num = va_arg(ap,int);//在函数内部转为ｕｉｎｔ
+          int nindex = strlen(out);
+          uori2a(num,nindex,out,&index,form,2);
+          i+=form.step;
+          break;
+        }
+        case 'c':{
+          int num = va_arg(ap,int);
+          char cw = (char)num;
+          if(form.width > 1)
+          {
+            int subres = form.width - 1;
+            if(form.addzero)
+              for(int j = 0; j < subres; j++)
+                tempstr[j] = '0';
+            else
+              for(int j = 0; j < subres; j++)
+                tempstr[j] = ' ';
+            tempstr[subres] = cw;
+            tempstr[subres+1] = '\0';
+          }
+          else {
+            tempstr[0] = cw;
+            tempstr[1] = '\0';
+          }
+          if(out != NULL)
+            strcat(out,tempstr);
+          else {
+            _puts(tempstr);
+            index += strlen(tempstr);
+          }
+          i+=form.step;
+          break;
+        }
         default:{
           _putc('N');
           _putc('\n');
@@ -202,7 +277,7 @@ int sprintf(char *out, const char *fmt, ...) {
   int cnt;
   va_start(ap,fmt);
   cnt = vsprintf(out,fmt,ap);
-  _puts(out);
+  // _puts(out);
   va_end(ap);
   return cnt;
 }
