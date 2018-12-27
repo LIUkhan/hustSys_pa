@@ -85,11 +85,11 @@ void difftest_step(uint32_t eip) {
 
   if(ref_r.eflags._CF != cpu.eflags._CF)
     status = false;
-  if(ref_r.eflags._CF != cpu.eflags._ZF)
+  if(ref_r.eflags._ZF != cpu.eflags._ZF)
     status = false;
-  if(ref_r.eflags._CF != cpu.eflags._SF)
+  if(ref_r.eflags._SF != cpu.eflags._SF)
     status = false;
-  if(ref_r.eflags._CF != cpu.eflags._OF)
+  if(ref_r.eflags._OF != cpu.eflags._OF)
     status = false;
   //输出信息,并且abort
   if (!status) {
