@@ -90,6 +90,6 @@ void difftest_step(uint32_t eip) {
 			printf("%s: nemu:0x%08x qemu:0x%08x\n",regsl[i],dvalue,ref);
 		}
 		printf("%s: nemu:0x%08x qemu:0x%08x\n", "eip", cpu.eip, ref_r.eip);
-    nemu_state = NEMU_ABORT;
+		nemu_state = NEMU_ABORT;
 	}
 }
