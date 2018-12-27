@@ -8,7 +8,7 @@ make_EHelper(test) {
   rtl_and(&res,&(id_dest->val),&(id_src->val));
   rtl_set_CF(&s0);
   rtl_set_OF(&s0);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(test);
 }
 
@@ -19,7 +19,7 @@ make_EHelper(and) {
   rtl_set_CF(&s0);
   rtl_set_OF(&s0);
   operand_write(id_dest,&res);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(and);
 }
 
@@ -30,7 +30,7 @@ make_EHelper(xor) {
   rtl_set_CF(&s0);
   rtl_set_OF(&s0);
   operand_write(id_dest, &res);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(xor);
 }
 
@@ -41,7 +41,7 @@ make_EHelper(or) {
   rtl_set_CF(&s0);
   rtl_set_OF(&s0);
   operand_write(id_dest, &res);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(or);
 }
 
@@ -51,7 +51,7 @@ make_EHelper(sar) {
   rtlreg_t res;
   rtl_sar(&res,&(id_dest->val),&(id_src->val));
   operand_write(id_dest,&res);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(sar);
 }
 
@@ -61,7 +61,7 @@ make_EHelper(shl) {//sal shl have the same effect
   rtlreg_t res;
   rtl_shl(&res,&(id_dest->val),&(id_src->val));
   operand_write(id_dest,&res);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(shl);
 }
 
@@ -71,7 +71,7 @@ make_EHelper(shr) {
   rtlreg_t res;
   rtl_shr(&res,&(id_dest->val),&(id_src->val));
   operand_write(id_dest,&res);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   print_asm_template2(shr);
 }
 

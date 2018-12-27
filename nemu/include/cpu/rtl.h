@@ -204,23 +204,44 @@ make_rtl_setget_eflags(ZF)
 make_rtl_setget_eflags(SF)
 
 //是否为0标志位
-static inline void rtl_update_ZF(const rtlreg_t* result) {
+static inline void rtl_update_ZF(const rtlreg_t* result,int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
   // TODO();
-	rtl_setrelopi(RELOP_EQ, &at, result, 0);
-  cpu.eflags._ZF = at ? 1 : 0;
+  switch(width)
+  {
+    case 1:{
+      rtlreg_t aimm;
+      rtl_li(&aimm,0xff);
+      rtl_and(&at,&aimm,result);
+      break;
+    }
+    case 2:{
+      rtlreg_t aimm;
+      rtl_li(&aimm,0xffff);
+      rtl_and(&at,&aimm,result);
+      break;
+    }
+    case 4:{
+      rtlreg_t aimm;
+      rtl_li(&aimm,0xffffffff);
+      rtl_and(&at,&aimm,result);
+      break;
+    }
+    default: assert(0);
+  }
+  cpu.eflags._ZF = (at == 0) ? 1 : 0;
 }
 
-static inline void rtl_update_SF(const rtlreg_t* result) {
+static inline void rtl_update_SF(const rtlreg_t* result,int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
   // TODO();
-	rtl_setrelopi(RELOP_LT, &at, result, 0);
-  cpu.eflags._SF = at ? 1 : 0;
+  rtl_msb(&at,result,width);
+  cpu.eflags._SF = (at == 1) ? 1 : 0;
 }
 
-static inline void rtl_update_ZFSF(const rtlreg_t* result) {
-  rtl_update_ZF(result);
-  rtl_update_SF(result);
+static inline void rtl_update_ZFSF(const rtlreg_t* result,int width) {
+  rtl_update_ZF(result,width);
+  rtl_update_SF(result,width);
 }
 
 #endif

@@ -4,7 +4,7 @@ make_EHelper(add) {
   rtlreg_t res;
   rtlreg_t CF_c, OF_c, s1,s2;
   rtl_add(&res, &(id_dest->val), &id_src->val);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   //无符号，结果小于加数
   rtl_setrelop(RELOP_LTU, &CF_c, &res, &(id_src->val));
 	rtl_set_CF(&CF_c);
@@ -23,7 +23,7 @@ make_EHelper(sub) {
   rtlreg_t CF_c, OF_c, relation, s_op;
   //减法，更新SF和ZF
 	rtl_sub(&result, &(id_dest->val), &id_src->val);
-	rtl_update_ZFSF(&result);
+	rtl_update_ZFSF(&result,id_dest->width);
 	//如果被减数小于减数,无符号的小于判断,无符号只需要考虑一种状况
 	rtl_setrelop(RELOP_LTU, &CF_c, &(id_dest->val), &(id_src->val));
 	rtl_set_CF(&CF_c);
@@ -42,7 +42,7 @@ make_EHelper(cmp) {
   rtlreg_t CF_c, OF_c, relation, s_op;
   //减法，更新SF和ZF
 	rtl_sub(&result, &(id_dest->val), &id_src->val);
-	rtl_update_ZFSF(&result);
+	rtl_update_ZFSF(&result,id_dest->width);
 	//如果被减数小于减数,无符号的小于判断,无符号只需要考虑一种状况
 	rtl_setrelop(RELOP_LTU, &CF_c, &(id_dest->val), &(id_src->val));
 	rtl_set_CF(&CF_c);
@@ -59,7 +59,7 @@ make_EHelper(inc) {
   rtlreg_t res,val,s1,s2,OF_c;
   rtl_li(&val,1);
   rtl_add(&res,&(id_dest->val),&val);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
 	rtl_xor(&s1,&res,&(id_dest->val));
   rtl_xor(&s2,&res,&val);
   rtl_and(&OF_c,&s1,&s2);
@@ -74,7 +74,7 @@ make_EHelper(dec) {
   rtlreg_t res,val,s_op,OF_c,relation;
   rtl_li(&val,1);
   rtl_sub(&res,&(id_dest->val),&val);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
 	//有符号的小于的判断，设置OF.1　< 2,为真１，如果结果为正０，溢出，反之依然
 	rtl_setrelop(RELOP_LT, &relation, &(id_dest->val), &val);
 	rtl_msb(&s_op, &res, id_dest->width);
@@ -92,7 +92,7 @@ make_EHelper(neg) {
   rtl_setrelop(RELOP_NE,&setcf,&(id_dest->val),&s0);
   rtl_set_CF(&setcf);
   rtl_imul_lo(&res,&(id_dest->val),&negop);
-  rtl_update_ZFSF(&res);
+  rtl_update_ZFSF(&res,id_dest->width);
   rtl_setrelop(RELOP_EQ, &setof, &(id_dest->val),&res);
   //不为０，且取反为自身，则溢出
   rtl_and(&setof,&setof,&setcf);
@@ -108,7 +108,7 @@ make_EHelper(adc) {
   rtl_add(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
 
-  rtl_update_ZFSF(&t2);
+  rtl_update_ZFSF(&t2,id_dest->width);
 
   rtl_setrelop(RELOP_LTU, &t0, &t2, &id_dest->val);
   rtl_or(&t0, &t3, &t0);
@@ -131,7 +131,7 @@ make_EHelper(sbb) {
   rtl_sub(&t2, &t2, &t1);
   operand_write(id_dest, &t2);
 
-  rtl_update_ZFSF(&t2);
+  rtl_update_ZFSF(&t2,id_dest->width);
 
   rtl_setrelop(RELOP_LTU, &t0, &id_dest->val, &t2);
   rtl_or(&t0, &t3, &t0);
