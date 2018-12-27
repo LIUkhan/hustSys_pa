@@ -82,15 +82,6 @@ void difftest_step(uint32_t eip) {
   }
   if(ref_r.eip != cpu.eip)
     status = false;
-
-  // if(ref_r.eflags._CF != cpu.eflags._CF)
-  //   status = false;
-  // if(ref_r.eflags._ZF != cpu.eflags._ZF)
-  //   status = false;
-  // if(ref_r.eflags._SF != cpu.eflags._SF)
-  //   status = false;
-  // if(ref_r.eflags._OF != cpu.eflags._OF)
-  //   status = false;
   //输出信息,并且abort
   if (!status) {
 		for (int i = 0; i < 8; ++i) {
@@ -99,11 +90,6 @@ void difftest_step(uint32_t eip) {
 			printf("%s: nemu:0x%08x qemu:0x%08x\n",regsl[i],dvalue,ref);
 		}
 		printf("%s: nemu:0x%08x qemu:0x%08x\n", "eip", cpu.eip, ref_r.eip);
-    // printf("CF: NEMU:%u  QEMU:%u\n",cpu.eflags._CF,ref_r.eflags._CF);
-    // printf("ZF: NEMU:%u  QEMU:%u\n",cpu.eflags._ZF,ref_r.eflags._ZF);
-    // printf("SF: NEMU:%u  QEMU:%u\n",cpu.eflags._SF,ref_r.eflags._SF);
-    // printf("OF: NEMU:%u  QEMU:%u\n",cpu.eflags._OF,ref_r.eflags._OF);
-		// if(!status)
     nemu_state = NEMU_ABORT;
 	}
 }

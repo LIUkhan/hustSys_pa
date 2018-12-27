@@ -90,7 +90,6 @@ make_EHelper(cwtl) {
     rtl_lr(&t0,R_AL,1);
     rtl_sext(&res,&t0,1);
     rtl_sr(R_AX,&res,2);
-
   }
   else {
     // TODO();EAX := SignExtend(AX);
