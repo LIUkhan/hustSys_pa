@@ -320,6 +320,7 @@ MAIN_RETURN_TYPE main(int argc, char *argv[]) {
     ee_printf("==================================================\n");
 	  ee_printf("CoreMark PASS       %d Marks\n", 4468608 / time_in_secs(total_time) * ITERATIONS / 1000);
 	  ee_printf("CoreMark PASS       %d Marks\n", 4468608 / 10961 * ITERATIONS / 1000);
+	  ee_printf("CoreMark PASS       %d Marks\n",  time_in_secs(total_time));
 	  ee_printf("                vs. 100000 Marks (i7-6700 @ 3.40GHz)\n");
   }
 	if (total_errors>0)
