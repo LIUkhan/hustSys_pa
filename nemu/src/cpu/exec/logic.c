@@ -45,10 +45,31 @@ make_EHelper(or) {
   print_asm_template2(or);
 }
 
-// make_EHelper(rol)　{
-//   rtlreg_t sign,temp;
-//   rtl_msb(&sign,&(id_dest->val),id_dest->width);
-// }
+make_EHelper(rol) {
+  rtlreg_t sign,newsign,temp,mask,offset,one,CF_c,OF_c;
+  rtl_li(&one,1);
+  rtl_li(&mask,0x80000000);
+  rtl_li(&offset,32-id_dest->val);
+
+  rtl_msb(&sign,&(id_dest->val),id_dest->width);//取出符号位
+
+  rtl_sar(&mask,&mask,&(id_src->val));
+  rtl_shl(&mask,&mask,&one);
+  rtl_and(&temp,&mask,&(id_dest->val));//取出移位内容
+
+  rtl_shr(&temp,&temp,&offset);
+  rtl_shl(&(id_dest->val),&(id_dest->val),&(id_src->val));
+  rtl_and(&(id_dest->val),&(id_dest->val),&temp);
+  //设置CF
+  rtl_and(&CF_c,&(id_dest->val),&one);
+  rtl_set_CF(&CF_c);
+  if(id_src->val == 1)//设置ＯＦ
+  {
+    rtl_msb(&newsign,&(id_dest->val),id_dest->width);//取出符号位
+    rtl_xor(&OF_c,&sign,&newsign);
+    rtl_set_OF(&OF_c);
+  }
+}
 
 make_EHelper(sar) {
   // TODO();
