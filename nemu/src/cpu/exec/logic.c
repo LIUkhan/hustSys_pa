@@ -46,15 +46,15 @@ make_EHelper(or) {
 }
 
 make_EHelper(rol) {
-  rtlreg_t res,sign,newsign,temp,mask,offset,one,CF_c,OF_c;
+  rtlreg_t res,sign,newsign,temp,mask,offset,one,CF_c,OF_c,getleft;
   rtl_li(&one,1);
   rtl_li(&mask,0x80000000);
   rtl_li(&offset,32-id_src->val);
+  rtl_li(&getleft,id_src->val-1);
 
   rtl_msb(&sign,&(id_dest->val),id_dest->width);//取出符号位
 
-  rtl_sar(&mask,&mask,&(id_src->val));
-  rtl_shl(&mask,&mask,&one);
+  rtl_sar(&mask,&mask,&getleft);
   rtl_and(&temp,&mask,&(id_dest->val));//取出移位内容
 
   rtl_shr(&temp,&temp,&offset);
