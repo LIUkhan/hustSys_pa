@@ -49,7 +49,7 @@ make_EHelper(rol) {
   rtlreg_t sign,newsign,temp,mask,offset,one,CF_c,OF_c;
   rtl_li(&one,1);
   rtl_li(&mask,0x80000000);
-  rtl_li(&offset,32-id_dest->val);
+  rtl_li(&offset,32-id_src->val);
 
   rtl_msb(&sign,&(id_dest->val),id_dest->width);//取出符号位
 
