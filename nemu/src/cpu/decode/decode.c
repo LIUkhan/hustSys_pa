@@ -42,15 +42,13 @@ static inline make_DopHelper(SI) {
    op->simm = ???
    */
   // TODO();
+  uint32_t offset = (4 - op->width) * 8;
   if(op->width == 4)
     op->simm = instr_fetch(eip,op->width);//call在取opcode时候fetch一次，跳过了opcode
   else {
     uint32_t simm = instr_fetch(eip,op->width);
-    int32_t temp = (int32_t)simm;
-    if(temp < 0)
-      op->simm = temp || 0xffffff00;
-    else
-      op->simm = temp;  
+    int32_t temp = simm << offset;
+    op->simm = temp >> offset;
   }
   rtl_li(&op->val, op->simm);
 
