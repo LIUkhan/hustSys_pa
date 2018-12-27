@@ -45,9 +45,14 @@ make_EHelper(or) {
   print_asm_template2(or);
 }
 
+// make_EHelper(rol)　{
+//   rtlreg_t sign,temp;
+//   rtl_msb(&sign,&(id_dest->val),id_dest->width);
+// }
+
 make_EHelper(sar) {
   // TODO();
-  // unnecessary to update CF and OF in NEMU
+  // unnecessary to update CF and OF in NEMUsign
   rtlreg_t res,s_dest;//需要对要扩展的数按照实际宽度做符号扩展
   rtl_sext(&s_dest,&(id_dest->val),id_dest->width);
   rtl_sar(&res,&s_dest,&(id_src->val));

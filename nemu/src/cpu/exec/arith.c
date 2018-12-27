@@ -19,40 +19,37 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  rtlreg_t res;
-  rtlreg_t CF_c, OF_c,rela1,rela2,rela;
+  rtlreg_t result;
+  rtlreg_t CF_c, OF_c, relation, s_op;
   //减法，更新SF和ZF
-	rtl_sub(&res, &(id_dest->val), &id_src->val);
-	rtl_update_ZFSF(&res,id_dest->width);
+	rtl_sub(&result, &(id_dest->val), &id_src->val);
+	rtl_update_ZFSF(&result,id_dest->width);
 	//如果被减数小于减数,无符号的小于判断,无符号只需要考虑一种状况
 	rtl_setrelop(RELOP_LTU, &CF_c, &(id_dest->val), &(id_src->val));
 	rtl_set_CF(&CF_c);
-	//有符号的小于的判断，设置OF.利用的是同符号减不会溢出，利用小于号囊括两种同符号的情况
-
-	rtl_xor(&rela1, &res, &(id_dest->val));
-  rtl_xor(&rela2, &(id_dest->val), &(id_src->val));
-  rtl_and(&rela,&rela1,&rela2);
-	rtl_msb(&OF_c, &rela, id_dest->width);
+	//有符号的小于的判断，设置OF.利用的是同符号减法才有可能溢出，利用小于号囊括两种同符号的情况
+	rtl_setrelop(RELOP_LT, &relation, &(id_dest->val), &(id_src->val));
+	rtl_msb(&s_op, &result, id_dest->width);
+	rtl_xor(&OF_c, &relation, &s_op);
   rtl_set_OF(&OF_c);
-  operand_write(id_dest,&res);
+  operand_write(id_dest,&result);
   print_asm_template2(sub);
 }
 
 make_EHelper(cmp) {
   // TODO();
-  rtlreg_t res;
-  rtlreg_t CF_c, OF_c,rela1,rela2,rela;
+  rtlreg_t result;
+  rtlreg_t CF_c, OF_c, relation, s_op;
   //减法，更新SF和ZF
-	rtl_sub(&res, &(id_dest->val), &id_src->val);
-	rtl_update_ZFSF(&res,id_dest->width);
+	rtl_sub(&result, &(id_dest->val), &id_src->val);
+	rtl_update_ZFSF(&result,id_dest->width);
 	//如果被减数小于减数,无符号的小于判断,无符号只需要考虑一种状况
 	rtl_setrelop(RELOP_LTU, &CF_c, &(id_dest->val), &(id_src->val));
 	rtl_set_CF(&CF_c);
 	//有符号的小于的判断，设置OF.利用的是同符号减法才有可能溢出，利用小于号囊括两种同符号的情况
-	rtl_xor(&rela1, &res, &(id_dest->val));
-  rtl_xor(&rela2, &(id_dest->val), &(id_src->val));
-  rtl_and(&rela,&rela1,&rela2);
-	rtl_msb(&OF_c, &rela, id_dest->width);
+	rtl_setrelop(RELOP_LT, &relation, &(id_dest->val), &(id_src->val));
+	rtl_msb(&s_op, &result, id_dest->width);
+	rtl_xor(&OF_c, &relation, &s_op);
   rtl_set_OF(&OF_c);
   print_asm_template2(cmp);
 }
@@ -74,15 +71,14 @@ make_EHelper(inc) {
 
 make_EHelper(dec) {
   // TODO();
-  rtlreg_t res,val,rela1,rela2,rela,OF_c;
+  rtlreg_t res,val,s_op,OF_c,relation;
   rtl_li(&val,1);
   rtl_sub(&res,&(id_dest->val),&val);
   rtl_update_ZFSF(&res,id_dest->width);
 	//有符号的小于的判断，设置OF.1　< 2,为真１，如果结果为正０，溢出，反之依然
-	rtl_xor(&rela1, &res, &(id_dest->val));
-  rtl_xor(&rela2, &(id_dest->val), &(id_src->val));
-  rtl_and(&rela,&rela1,&rela2);
-	rtl_msb(&OF_c, &rela, id_dest->width);
+	rtl_setrelop(RELOP_LT, &relation, &(id_dest->val), &val);
+	rtl_msb(&s_op, &res, id_dest->width);
+	rtl_xor(&OF_c, &relation, &s_op);
   rtl_set_OF(&OF_c);
   operand_write(id_dest,&res);
   print_asm_template1(dec);
