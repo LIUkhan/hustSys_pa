@@ -48,18 +48,18 @@ make_EHelper(or) {
 make_EHelper(rol) {
   rtlreg_t res,sign,newsign,temp,mask,offset,one,CF_c,OF_c,getleft;
   rtl_li(&one,1);
-  rtl_li(&mask,0x80000000);
+  rtl_li(&t0,0x80000000);
   rtl_li(&offset,32-id_src->val);
   rtl_li(&getleft,id_src->val-1);
 
   rtl_msb(&sign,&(id_dest->val),id_dest->width);//取出符号位
 
-  rtl_sar(&mask,&mask,&getleft);
-  rtl_and(&temp,&mask,&(id_dest->val));//取出移位内容
+  rtl_sar(&mask,&t0,&getleft);
+  rtl_and(&t1,&mask,&(id_dest->val));//取出移位内容
 
-  rtl_shr(&temp,&temp,&offset);
-  rtl_shl(&res,&(id_dest->val),&(id_src->val));
-  rtl_and(&res,&res,&temp);
+  rtl_shr(&temp,&t1,&offset);
+  rtl_shl(&t2,&(id_dest->val),&(id_src->val));
+  rtl_and(&res,&t2,&temp);
   //设置CF
   rtl_and(&CF_c,&(id_dest->val),&one);
   rtl_set_CF(&CF_c);
