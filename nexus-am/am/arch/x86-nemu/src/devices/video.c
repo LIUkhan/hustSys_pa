@@ -26,8 +26,8 @@ size_t video_read(uintptr_t reg, void *buf, size_t size) {
       // uint32_t WH = inl(SCREEN_PORT);//from vga.c
       // info->width =  (WH >>16)/2;
       // info->height = (WH && 0xffff)/2;
-      info->width = W;
-      info->height = H;
+      info->width = screen_width();
+      info->height = screen_height();
       return sizeof(_VideoInfoReg);
     }
   }
@@ -39,11 +39,12 @@ size_t video_write(uintptr_t reg, void *buf, size_t size) {
     case _DEVREG_VIDEO_FBCTL: {
       _FBCtlReg *ctl = (_FBCtlReg *)buf;
       // int i;
-      // int size = screen_width() * screen_height();
+      // int size =  * ;
       // for (i = 0; i < size; i ++) fb[i] = i;
+      int width = screen_width();
       for(int y = ctl->y; y < ctl->y + ctl->h; y++)
         for(int x = ctl->x; x < ctl->x + ctl->w; x++)
-          fb[y*W+x] = *(ctl->pixels);
+          fb[y*width+x] = *(ctl->pixels);
       if (ctl->sync) {
         // do nothing, hardware syncs.
       }
