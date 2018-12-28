@@ -11,13 +11,6 @@
 static uint32_t* const fb __attribute__((used)) = (uint32_t *)0x40000;
 
 
-static inline uint32_t pixel(uint8_t r, uint8_t g, uint8_t b) {
-  return (r << 16) | (g << 8) | b;
-}
-static inline uint8_t R(uint32_t p) { return p >> 16; }
-static inline uint8_t G(uint32_t p) { return p >> 8; }
-static inline uint8_t B(uint32_t p) { return p; }
-
 
 size_t video_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
