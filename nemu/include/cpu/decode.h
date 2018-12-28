@@ -10,8 +10,8 @@ enum { OP_TYPE_REG, OP_TYPE_MEM, OP_TYPE_IMM };
 #define OP_STR_SIZE 40
 
 typedef struct {
-  uint32_t type;
-  int width;
+  uint32_t type;//操作数类型
+  int width;  //操作数宽度
   union {
     uint32_t reg;
     rtlreg_t addr;
@@ -24,7 +24,7 @@ typedef struct {
 
 typedef struct {
   uint32_t opcode;
-  vaddr_t seq_eip;  // sequential eip
+  vaddr_t seq_eip;  // sequential eip 作为参数送进exec_real()函数
   bool is_operand_size_16;
   uint8_t ext_opcode;
   bool is_jmp;
@@ -33,7 +33,7 @@ typedef struct {
 #ifdef DEBUG
   char assembly[80];
   char asm_buf[128];
-  char *p;
+  char *p;  //存指令的16进制字符串
 #endif
 } DecodeInfo;
 
@@ -82,7 +82,8 @@ make_DHelper(SI_E2G);
 make_DHelper(I_E2G);
 make_DHelper(I_G2E);
 make_DHelper(I);
-make_DHelper(r);
+make_DHelper(r);//取出在opcode中的reg信息，取值放在id_dest
+make_DHelper(r_);
 make_DHelper(E);
 make_DHelper(setcc_E);
 make_DHelper(gp7_E);

@@ -10,18 +10,50 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
     CC_S, CC_NS, CC_P,  CC_NP,
     CC_L, CC_NL, CC_LE, CC_NLE
   };
-
+  rtlreg_t temp,temp1,temp2;
   // TODO: Query EFLAGS to determine whether the condition code is satisfied.
   // dest <- ( cc is satisfied ? 1 : 0)
   switch (subcode & 0xe) {
-    case CC_O:
-    case CC_B:
-    case CC_E:
-    case CC_BE:
-    case CC_S:
-    case CC_L:
-    case CC_LE:
-      TODO();
+    case CC_O: {
+      rtl_get_OF(&temp);
+      *dest = (temp == 1) ? 1 : 0;
+      break;
+    }
+    case CC_B: {
+      rtl_get_CF(&temp);
+      *dest = (temp == 1) ? 1 : 0;
+      break;
+    }
+    case CC_E: {
+      rtl_get_ZF(&temp);
+      *dest = (temp == 1) ? 1 : 0;
+      break;
+    }
+    case CC_BE: {
+      rtl_get_ZF(&temp1);
+      rtl_get_CF(&temp2);
+      *dest = ((temp1 == 1) || (temp2 == 1)) ? 1 : 0;
+      break;
+    }
+    case CC_S: {
+      rtl_get_SF(&temp);
+      *dest = (temp == 1) ? 1 : 0;
+      break;
+    }
+    case CC_L: {
+      rtl_get_SF(&temp1);
+      rtl_get_OF(&temp2);
+      *dest = (temp1 != temp2) ? 1 : 0;
+      break;
+    }
+    case CC_LE: {
+      rtl_get_ZF(&temp);
+      rtl_get_SF(&temp1);
+      rtl_get_OF(&temp2);
+      *dest = (temp == 1 || (temp1 != temp2)) ? 1 : 0;
+      break;
+    }
+      // TODO();
     default: panic("should not reach here");
     case CC_P: panic("n86 does not have PF");
   }
