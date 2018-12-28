@@ -99,12 +99,12 @@ int main() {
   
   printf("==================================================\n");
   printf("MicroBench %s", pass ? "PASS" : "FAIL");
-  if (SETTING != 0) {
+  // if (SETTING != 0) {
     printf("        %d Marks\n", (unsigned int)bench_score);
     printf("                   vs. %d Marks (%s)\n", REF_SCORE, REF_CPU);
-  } else {
-    printf("\n");
-  }
+  // } else {
+  //   printf("\n");
+  // }
   _halt(0);
   return 0;
 }
