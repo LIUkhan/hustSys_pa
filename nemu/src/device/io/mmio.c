@@ -47,7 +47,7 @@ uint32_t mmio_read(paddr_t addr, int len, int map_NO) {
   assert(len >= 1 && len <= 4);
   MMIO_t *map = &maps[map_NO];
   uint32_t data = *(uint32_t *)(map->mmio_space + (addr - map->low)) 
-    & (~0u >> ((4 - len) << 3));
+    & (~0u >> ((4 - len) << 3));//取对应的字节数
   if (map->callback != NULL) {
     map->callback(addr, len, false);
   }
