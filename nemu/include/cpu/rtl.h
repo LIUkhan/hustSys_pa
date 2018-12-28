@@ -182,7 +182,7 @@ static inline void rtl_setrelopi(uint32_t relop, rtlreg_t *dest,
   rtl_setrelop(relop,dest,src1,&at);
 }
 //取出符号位
-inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
+static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // dest <- src1[width * 8 - 1]
   uint32_t offset = 8 * width-1;
   uint32_t temp = (*src1)>>offset;
