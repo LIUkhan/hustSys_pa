@@ -3,8 +3,7 @@
 #include <amdev.h>
 #include <klib.h>
 
-#define W 400
-#define H 300
+#define SCREEN_PORT 0x100
 
 static uint32_t* const fb __attribute__((used)) = (uint32_t *)0x40000;
 
@@ -21,8 +20,9 @@ size_t video_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
     case _DEVREG_VIDEO_INFO: {
       _VideoInfoReg *info = (_VideoInfoReg *)buf;
-      info->width = W;
-      info->height = H;
+      uint32_t WH = inl(SCREEN_PORT);//from vga.c
+      info->width = (WH && 0xffff0000)>>16;
+      info->height = WH && 0xffff;
       return sizeof(_VideoInfoReg);
     }
   }
@@ -36,6 +36,7 @@ size_t video_write(uintptr_t reg, void *buf, size_t size) {
       int i;
       int size = screen_width() * screen_height();
       for (i = 0; i < size; i ++) fb[i] = i;
+
       if (ctl->sync) {
         // do nothing, hardware syncs.
       }
