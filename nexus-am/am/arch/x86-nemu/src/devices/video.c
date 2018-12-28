@@ -17,11 +17,8 @@ size_t video_read(uintptr_t reg, void *buf, size_t size) {
     case _DEVREG_VIDEO_INFO: {
       _VideoInfoReg *info = (_VideoInfoReg *)buf;
       uint32_t wh = inl(SCREEN_PORT);//from vga.c
-      info->height = wh && 0xffff;info->width =  wh >> 16;
-      
-      printf("%x\n",wh);
-      // info->width = screen_width();
-      // info->height = screen_height();
+      info->height = wh & 0xffff;
+      info->width =  wh >> 16;
       return sizeof(_VideoInfoReg);
     }
   }
