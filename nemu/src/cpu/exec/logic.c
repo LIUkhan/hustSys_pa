@@ -46,7 +46,7 @@ make_EHelper(or) {
 }
 
 make_EHelper(rol) {
-  rtlreg_t sign,newsign,temp,mask,offset,one,CF_c,OF_c,getleft;
+  rtlreg_t res,sign,newsign,temp,mask,offset,one,CF_c,OF_c,getleft;
   rtl_li(&one,1);
   rtl_li(&t0,0x80000000);
   rtl_li(&offset,32-id_src->val);
@@ -58,9 +58,8 @@ make_EHelper(rol) {
   rtl_and(&t1,&mask,&(id_dest->val));//取出移位内容
 
   rtl_shr(&temp,&t1,&offset);
-  operand_write(id_dest, &temp);
-  // rtl_shl(&t2,&(id_dest->val),&(id_src->val));
-  // rtl_and(&res,&t2,&temp);
+  rtl_shl(&t2,&(id_dest->val),&(id_src->val));
+  rtl_or(&res,&t2,&temp);
   // //设置CF
   rtl_and(&CF_c,&(id_dest->val),&one);
   rtl_set_CF(&CF_c);
@@ -70,7 +69,7 @@ make_EHelper(rol) {
     rtl_xor(&OF_c,&sign,&newsign);
     rtl_set_OF(&OF_c);
   }
-  // operand_write(id_dest, &res);
+  operand_write(id_dest, &res);
   print_asm_template2(rol);
 }
 
