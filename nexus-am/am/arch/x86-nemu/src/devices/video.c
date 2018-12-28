@@ -11,6 +11,9 @@
 static uint32_t* const fb __attribute__((used)) = (uint32_t *)0x40000;
 
 
+static inline int min(int x, int y) {
+  return (x < y) ? x : y;
+}
 
 size_t video_read(uintptr_t reg, void *buf, size_t size) {
   switch (reg) {
@@ -32,10 +35,20 @@ size_t video_write(uintptr_t reg, void *buf, size_t size) {
       // int i;
       // int size =  screen_width() * screen_height();
       // for (i = 0; i < size; i ++) fb[i] = i;
-      int width = screen_width();
-      for(int y = ctl->y; y < ctl->y + ctl->h; y++)
-        for(int x = ctl->x; x < ctl->x + ctl->w; x++)
-          fb[y*width+x] = *(ctl->pixels);
+      // int width = screen_width();
+      // for(int y = ctl->y; y < ctl->y + ctl->h; y++)
+      //   for(int x = ctl->x; x < ctl->x + ctl->w; x++)
+      //     fb[y*width+x] = *(ctl->pixels);
+
+      int x = ctl->x, y = ctl->y, w = ctl->w, h = ctl->h;
+      int W = screen_width();
+      int H = screen_height();
+      uint32_t *pixels = ctl->pixels;
+      int cp_bytes = sizeof(uint32_t) * min(w, W - x);
+      for (int j = 0; j < h && y + j < H; j ++) {
+        memcpy(&fb[(y + j) * W + x], pixels, cp_bytes);
+        pixels += w;
+      }
       if (ctl->sync) {
         // do nothing, hardware syncs.
       }
