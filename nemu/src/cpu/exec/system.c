@@ -45,9 +45,9 @@ make_EHelper(mov_cr2r) {
 make_EHelper(int) {
   // TODO();
   //必须是立即数类型的
-  // assert(id_dest->type == OP_TYPE_IMM);
-  // raise_intr(id_dest->val, decoding.seq_eip);
-  // print_asm("int %s", id_dest->str);
+  assert(id_dest->type == OP_TYPE_IMM);
+  raise_intr(id_dest->val, decoding.seq_eip);
+  print_asm("int %s", id_dest->str);
 
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
   difftest_skip_dut();
