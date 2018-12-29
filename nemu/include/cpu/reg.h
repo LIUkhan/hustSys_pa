@@ -39,11 +39,11 @@ typedef struct {
   union{
     struct{
       uint32_t _CF:1;
-      const uint32_t t0:1;
+      uint32_t t0:1;
       uint32_t _PF:1;
-      const uint32_t t1:1;
+      uint32_t t1:1;
       uint32_t _AF:1;
-      const uint32_t t2:1;
+      uint32_t t2:1;
       uint32_t _ZF:1;
       uint32_t _SF:1;
       uint32_t _TF:1;
@@ -52,13 +52,18 @@ typedef struct {
       uint32_t _OF:1;
       uint32_t _IOPL:2;
       uint32_t _NT:1;
-      const uint32_t t3:1;
+      uint32_t t3:1;
       uint32_t _RF:1;
       uint32_t _VM:1;
       uint32_t _hflags:14;
     };
+    uint32_t content;
   }eflags;
-
+  struct{
+    rtlreg_t base;
+    rtlreg_t limit;
+  }IDTR;
+  uint32_t cs;
 } CPU_state;
 
 extern CPU_state cpu;

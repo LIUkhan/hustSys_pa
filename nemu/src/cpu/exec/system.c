@@ -8,11 +8,21 @@ extern uint32_t pio_read_l(ioaddr_t);
 extern void pio_write_b(ioaddr_t, uint32_t);
 extern void pio_write_w(ioaddr_t, uint32_t);
 extern void pio_write_l(ioaddr_t, uint32_t);
-
+extern void raise_intr(uint8_t, vaddr_t);
 
 make_EHelper(lidt) {
-  TODO();
-
+  // TODO();
+  rtlreg_t low16,high32,mask,baseaddr;
+  rtl_li(&mask,0xffffff);
+  rtl_li(&baseaddr,id_dest->val+2);
+  rtl_lm(&low16,&(id_dest->val),2);
+  rtl_lm(&high32,&baseaddr,4);
+  rtl_mv(&(cpu.IDTR.limit),&low16);
+  
+  if(decoding.is_operand_size_16)   
+    rtl_and(&high32,&high32,&mask);
+  
+  rtl_mv(&(cpu.IDTR.base),&high32);
   print_asm_template1(lidt);
 }
 
@@ -33,8 +43,10 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  TODO();
-
+  // TODO();
+  //必须是立即数类型的
+  assert(id_dest->type == OP_TYPE_IMM);
+  raise_intr(id_dest->val, decoding.seq_eip);
   print_asm("int %s", id_dest->str);
 
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
