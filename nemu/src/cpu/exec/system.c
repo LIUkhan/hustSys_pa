@@ -62,14 +62,8 @@ make_EHelper(stos)
 {
   rtlreg_t ax;
   rtl_li(&ax,cpu.gpr[R_EAX]._16);
-  if(decoding.is_operand_size_16) {
-    rtl_sm(&cpu.edi, &ax, 2);
-    cpu.edi += 2;
-  }
-  else {
-    rtl_sm(&cpu.edi, &cpu.eax, 4);
-    cpu.edi += 4;
-  }
+  rtl_sm(&cpu.edi, &(id_src->val),id_src->width);
+  cpu.edi += id_src->width;
   print_asm("stos");
 }
 
