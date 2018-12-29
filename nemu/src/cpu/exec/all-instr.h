@@ -10,8 +10,6 @@ make_EHelper(call);
 make_EHelper(ret);
 make_EHelper(push);
 make_EHelper(pop);
-make_EHelper(pusha);
-make_EHelper(popa);
 make_EHelper(nop);
 make_EHelper(xchg);
 make_EHelper(cmp);
