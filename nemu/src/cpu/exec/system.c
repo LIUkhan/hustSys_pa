@@ -12,10 +12,11 @@ extern void raise_intr(uint8_t, vaddr_t);
 
 make_EHelper(lidt) {
   // TODO();
-  rtlreg_t baseaddr,mask;
+  rtlreg_t baseaddr,mask,cons;
+  rtl_li(&cons,2);
   rtl_li(&mask,0xffffff);
   rtl_lm(&cpu.IDTR.limit, &(id_dest->val), 2);
-  rtl_addi(&baseaddr, &id_dest->addr, 2);
+  rtl_add(&baseaddr, &id_dest->addr,&cons);
   rtl_lm(&cpu.IDTR.base, &baseaddr, 4);  
   if(decoding.is_operand_size_16)   
     rtl_and(&cpu.IDTR.base,&cpu.IDTR.base,&mask);
