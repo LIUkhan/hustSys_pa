@@ -96,7 +96,7 @@ opcode_entry opcode_table [512] = {
   /* 0x54 */	IDEX(r,push), IDEX(r,push), IDEX(r,push), IDEX(r,push),
   /* 0x58 */	IDEX(r_,pop), IDEX(r_,pop), IDEX(r_,pop), IDEX(r_,pop),
   /* 0x5c */	IDEX(r_,pop), IDEX(r_,pop), IDEX(r_,pop), IDEX(r_,pop),
-  /* 0x60 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x60 */	EX(pusha), EX(popa), EMPTY, EMPTY,
   /* 0x64 */	EMPTY, EMPTY, EX(operand_size), EMPTY,
   /* 0x68 */	IDEX(push_SI,push), IDEX(I_E2G,imul3), IDEXW(push_SI,push,1), IDEX(SI_E2G,imul3),
   /* 0x6c */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -236,7 +236,6 @@ void exec_wrapper(bool print_flag) {
 
   decoding.seq_eip = ori_eip;
   exec_real(&decoding.seq_eip);
-  // printf("%x\n",decoding.seq_eip);
 
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - ori_eip;

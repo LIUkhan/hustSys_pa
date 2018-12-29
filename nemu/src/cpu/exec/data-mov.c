@@ -19,12 +19,13 @@ make_EHelper(pop) {
 
 make_EHelper(pusha) {
   // TODO();
-  rtl_lr(&t0,R_ESP,4);
+  rtlreg_t tempESP;
+  rtl_mv(&tempESP, &cpu.esp);
   rtl_push(&(cpu.eax));
   rtl_push(&(cpu.ecx));
   rtl_push(&(cpu.edx));
   rtl_push(&(cpu.ebx));
-  rtl_push(&t0);
+  rtl_push(&tempESP);
   rtl_push(&(cpu.ebp));
   rtl_push(&(cpu.esi));
   rtl_push(&(cpu.edi));
@@ -33,10 +34,11 @@ make_EHelper(pusha) {
 
 make_EHelper(popa) {
   // TODO();
+  rtlreg_t temp;
   rtl_pop(&(cpu.edi));
   rtl_pop(&(cpu.esi));
   rtl_pop(&(cpu.ebp));
-  rtl_pop(&t0);
+  rtl_pop(&temp);
   rtl_pop(&(cpu.ebx));
   rtl_pop(&(cpu.edx));
   rtl_pop(&(cpu.ecx));
