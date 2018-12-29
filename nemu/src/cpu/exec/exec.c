@@ -236,6 +236,7 @@ void exec_wrapper(bool print_flag) {
 
   decoding.seq_eip = ori_eip;
   exec_real(&decoding.seq_eip);
+  printf("%x\n",decoding.seq_eip);
 
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - ori_eip;
