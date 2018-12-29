@@ -91,7 +91,7 @@ make_DHelper(test_I);
 make_DHelper(SI);
 make_DHelper(G2E);
 make_DHelper(E2G);
-
+make_DHelper(a_stos);
 make_DHelper(mov_I2r);
 make_DHelper(mov_I2E);
 make_DHelper(mov_G2E);
@@ -113,5 +113,5 @@ make_DHelper(in_I2a);
 make_DHelper(in_dx2a);
 make_DHelper(out_a2I);
 make_DHelper(out_a2dx);
-make_DHelper(a_stos);
+
 #endif
