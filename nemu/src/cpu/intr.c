@@ -33,6 +33,8 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_li(&mask2, 0xffff0000);
 	rtl_and(&mask1, &mask1, &loff);
 	rtl_and(&mask2, &mask2, &hoff);  
+  printf("%x\n",mask2);
+  printf("%x\n",mask1);
   rtl_or(&offset, &mask1, &mask2);  
   // 跳转到目标地址
   rtl_jr(&offset);
