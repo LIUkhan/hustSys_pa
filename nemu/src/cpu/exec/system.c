@@ -12,17 +12,17 @@ extern void raise_intr(uint8_t, vaddr_t);
 
 make_EHelper(lidt) {
   // TODO();
-  // rtlreg_t low16,high32,mask,baseaddr;
-  // rtl_li(&mask,0xffffff);
-  // rtl_li(&baseaddr,id_dest->val+2);
-  // rtl_lm(&low16,&(id_dest->val),2);
-  // rtl_lm(&high32,&baseaddr,4);
-  // rtl_mv(&(cpu.IDTR.limit),&low16);
+  rtlreg_t low16,high32,mask,baseaddr;
+  rtl_li(&mask,0xffffff);
+  rtl_li(&baseaddr,id_dest->val+2);
+  rtl_lm(&low16,&(id_dest->val),2);
+  rtl_lm(&high32,&baseaddr,4);
+  rtl_mv(&(cpu.IDTR.limit),&low16);
   
-  // if(decoding.is_operand_size_16)   
-  //   rtl_and(&high32,&high32,&mask);
+  if(decoding.is_operand_size_16)   
+    rtl_and(&high32,&high32,&mask);
   
-  // rtl_mv(&(cpu.IDTR.base),&high32);
+  rtl_mv(&(cpu.IDTR.base),&high32);
   print_asm_template1(lidt);
 }
 
