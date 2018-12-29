@@ -19,10 +19,11 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 	rtl_push(&seqEIP);  
   //gate地址, 从IDTR中读出IDT的首地址,根据异常号在IDT中进行索引, 找到一个门描述符
 	rtl_add(&addr, &cpu.IDTR.base,&cons1);
-
+  printf("%x\n",addr);
 	// 将门描述符中的offset域组合成目标地址
 	rtl_lm(&loff, &addr, 4);	
 	rtl_add(&addr, &addr,&cons2);
+  printf("%x\n",addr);
 	rtl_lm(&hoff, &addr, 4); 
   //检查Present位，看门描述符空闲还是占用，１为占用，因为初始化为１
   assert(((hoff >> 15) & 1) == 1);
@@ -32,7 +33,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_li(&mask2, 0xffff0000);
 	rtl_and(&mask1, &mask1, &loff);
 	rtl_and(&mask2, &mask2, &hoff);  
-  rtl_or(&offset, &mask2, &mask1);  
+  rtl_or(&offset, &mask1, &mask2);  
   // 跳转到目标地址
   rtl_jr(&offset);
   // TODO();
