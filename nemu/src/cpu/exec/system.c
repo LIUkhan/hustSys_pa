@@ -47,7 +47,7 @@ make_EHelper(int) {
   assert(id_dest->type == OP_TYPE_IMM);
   raise_intr(id_dest->val, decoding.seq_eip);
   print_asm("int %s", id_dest->str);
-  // printf("int %x\n",id_dest->val);
+  printf("int %x\n",id_dest->val);
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
   difftest_skip_dut();
 #endif
