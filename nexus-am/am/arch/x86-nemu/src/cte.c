@@ -1,6 +1,7 @@
 #include <am.h>
 #include <x86.h>
 #include"klib.h"
+
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
 
 void vectrap();
@@ -13,25 +14,22 @@ _Context* irq_handle(_Context *tf) {
     switch (tf->irq) {
       default: ev.event = _EVENT_ERROR; break;
     }
-
+    printf("esi:0x%08x\n",tf->esi);
+    printf("edi:0x%08x\n",tf->edi);
+    printf("ebp:0x%08x\n",tf->ebp);
+    printf("esp:0x%08x\n",tf->esp);
+    printf("ebx:0x%08x\n",tf->ebx);
+    printf("edx:0x%08x\n",tf->edx);
+    printf("ecx:0x%08x\n",tf->ecx);
+    printf("eax:0x%08x\n",tf->eax);
+    printf("irq:0x%x\n",tf->irq);
+    printf("err:0x%x\n",tf->err);
+    printf("eip:0x%08x\n",tf->eip);
+    printf("cs:0x%08x\n",tf->cs);
+    printf("eflags:0x%08x\n",tf->eflags);
     next = user_handler(ev, tf);
     if (next == NULL) {
       next = tf;
-    }
-    else {
-      printf("esi:0x%08x\n",tf->esi);
-      printf("edi:0x%08x\n",tf->edi);
-      printf("ebp:0x%08x\n",tf->ebp);
-      printf("esp:0x%08x\n",tf->esp);
-      printf("ebx:0x%08x\n",tf->ebx);
-      printf("edx:0x%08x\n",tf->edx);
-      printf("ecx:0x%08x\n",tf->ecx);
-      printf("eax:0x%08x\n",tf->eax);
-      printf("irq:0x%x\n",tf->irq);
-      printf("err:0x%x\n",tf->err);
-      printf("eip:0x%08x\n",tf->eip);
-      printf("cs:0x%08x\n",tf->cs);
-      printf("eflags:0x%08x\n",tf->eflags);
     }
   }
 
