@@ -98,8 +98,8 @@ static inline void parse_args(int argc, char *argv[]) {
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
       case 1:
-                if (img_file != NULL) Log("too much argument '%s', ignored", optarg);
-                else img_file = optarg;
+                // if (img_file != NULL) Log("too much argument '%s', ignored", optarg);
+                // else img_file = optarg;
                 break;
       default:
                 panic("Usage: %s [-b] [-l log_file] [img_file]", argv[0]);
