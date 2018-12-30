@@ -91,8 +91,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
         //匹配子正则表达式成功,e是需要解析的字符串，一个一个匹配正则表达式词法分析开来
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start); 
+        // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        //     i, rules[i].regex, position, substr_len, substr_len, substr_start); 
             
         position += substr_len;
         /* TODO: Now a new token is recognized with rules[i]. Add codes
