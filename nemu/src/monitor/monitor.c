@@ -25,15 +25,15 @@ static inline void init_log() {
 
 static inline void welcome() {
 #ifdef DEBUG
-  // Log("Debug: \33[1;32m%s\33[0m", "ON");
-  // Log("If debug mode is on, A log file will be generated to record every instruction NEMU executes. "
-  //     "This may lead to a large log file. "
-  //     "If it is not necessary, you can turn it off in include/common.h.");
+  Log("Debug: \33[1;32m%s\33[0m", "ON");
+  Log("If debug mode is on, A log file will be generated to record every instruction NEMU executes. "
+      "This may lead to a large log file. "
+      "If it is not necessary, you can turn it off in include/common.h.");
 #else
-  // Log("Debug: \33[1;32m%s\33[0m", "OFF");
+  Log("Debug: \33[1;32m%s\33[0m", "OFF");
 #endif
 
-  // Log("Build time: %s, %s", __TIME__, __DATE__);
+  Log("Build time: %s, %s", __TIME__, __DATE__);
   printf("Welcome to NEMU!\n");
   printf("For help, type \"help\"\n");
 }
@@ -51,7 +51,7 @@ static inline int load_default_img() {
     0xd6,                                // 100026:  nemu_trap
   };
 
-  // Log("No image is given. Use the default build-in image.");
+  Log("No image is given. Use the default build-in image.");
 
   memcpy(guest_to_host(ENTRY_START), img, sizeof(img));
 
@@ -69,7 +69,7 @@ static inline long load_img() {
     FILE *fp = fopen(img_file, "rb");
     Assert(fp, "Can not open '%s'", img_file);
 
-    // Log("The image is %s", img_file);
+    Log("The image is %s", img_file);
 
     fseek(fp, 0, SEEK_END);
     size = ftell(fp);
@@ -98,8 +98,8 @@ static inline void parse_args(int argc, char *argv[]) {
       case 'l': log_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
       case 1:
-                // if (img_file != NULL) Log("too much argument '%s', ignored", optarg);
-                // else img_file = optarg;
+                if (img_file != NULL) Log("too much argument '%s', ignored", optarg);
+                else img_file = optarg;
                 break;
       default:
                 panic("Usage: %s [-b] [-l log_file] [img_file]", argv[0]);
