@@ -54,7 +54,7 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
       break;
     }
       // TODO();
-    default: panic("should not reach here");
+    default: panic("should not reach hereq");
     case CC_P: panic("n86 does not have PF");
   }
 
