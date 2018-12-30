@@ -12,21 +12,28 @@ _Context* irq_handle(_Context *tf) {
   if (user_handler) {
     _Event ev = {0};
     switch (tf->irq) {
-      default: ev.event = _EVENT_ERROR; break;
+      case 0x81: {
+        ev.event = _EVENT_YIELD; 
+        break;
+      }
+      default: {
+        ev.event = _EVENT_ERROR; 
+        break;
+      }
     }
-    printf("esi:0x%08x\n",tf->esi);
-    printf("edi:0x%08x\n",tf->edi);
-    printf("ebp:0x%08x\n",tf->ebp);
-    printf("esp:0x%08x\n",tf->esp);
-    printf("ebx:0x%08x\n",tf->ebx);
-    printf("edx:0x%08x\n",tf->edx);
-    printf("ecx:0x%08x\n",tf->ecx);
-    printf("eax:0x%08x\n",tf->eax);
-    printf("irq:0x%x\n",tf->irq);
-    printf("err:0x%x\n",tf->err);
-    printf("eip:0x%08x\n",tf->eip);
-    printf("cs:0x%08x\n",tf->cs);
-    printf("eflags:0x%08x\n",tf->eflags);
+    // printf("esi:0x%08x\n",tf->esi);
+    // printf("edi:0x%08x\n",tf->edi);
+    // printf("ebp:0x%08x\n",tf->ebp);
+    // printf("esp:0x%08x\n",tf->esp);
+    // printf("ebx:0x%08x\n",tf->ebx);
+    // printf("edx:0x%08x\n",tf->edx);
+    // printf("ecx:0x%08x\n",tf->ecx);
+    // printf("eax:0x%08x\n",tf->eax);
+    // printf("irq:0x%x\n",tf->irq);
+    // printf("err:0x%x\n",tf->err);
+    // printf("eip:0x%08x\n",tf->eip);
+    // printf("cs:0x%08x\n",tf->cs);
+    // printf("eflags:0x%08x\n",tf->eflags);
     next = user_handler(ev, tf);
     if (next == NULL) {
       next = tf;
