@@ -7,11 +7,13 @@
 #define PGSIZE    4096    // Bytes mapped by a page
 
 typedef uint32_t size_t;
-
+//push esp是函数传参
 struct _Context {
-  uintptr_t esi, ebx, eax, eip, edx, err, eflags, ecx, cs, esp, edi, ebp;
-  struct _Protect *prot;
-  int       irq;
+  // uintptr_t esi, ebx, eax, eip, edx, err, eflags, ecx, cs, esp, edi, ebp;
+  struct _Protect *prot;//页表指针 push 0占位
+  uintptr_t esi,edi,ebp,esp,ebx,edx,ecx,eax;
+  int irq,err;
+  uintptr_t eip,cs,eflags;
 };
 
 #define GPR1 eax

@@ -19,7 +19,6 @@ void irq_handle(_Context *c) {
   if (ret != NULL) {
     c = ret;
   }
-
   _switch(c);
   c->uc.uc_mcontext.gregs[REG_RIP] = (uintptr_t)ret_from_trap;
   c->uc.uc_mcontext.gregs[REG_RSP] = (uintptr_t)c;
