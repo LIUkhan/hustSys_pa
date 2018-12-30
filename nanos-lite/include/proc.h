@@ -18,5 +18,8 @@ typedef union {
 } PCB;
 
 extern PCB *current;
-
+extern void naive_uload(PCB *, const char *);
+size_t ramdisk_read(void *, size_t, size_t);
+size_t ramdisk_write(const void *, size_t, size_t);
+size_t get_ramdisk_size();
 #endif
