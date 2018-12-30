@@ -34,7 +34,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
  
   rtl_or(&offset, &mask1, &mask2);
   // 跳转到目标地址
-  rtl_j(offset);
+  rtl_jr(&offset);
   // TODO();
 }
 
