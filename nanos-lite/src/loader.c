@@ -6,7 +6,6 @@
 static uintptr_t loader(PCB *pcb, const char *filename) {
   // TODO();
   size_t rsize = get_ramdisk_size();
-  printf("%d\n",rsize);
   ramdisk_read((void *)DEFAULT_ENTRY,0,rsize);
   return DEFAULT_ENTRY;
 }
