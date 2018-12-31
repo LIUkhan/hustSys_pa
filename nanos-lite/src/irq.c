@@ -6,10 +6,10 @@ static _Context* do_event(_Event e, _Context* c) {
       printf("_event_yield\n");
       break;
     }
-    case 6:{
-      printf("_event_syscall\n");
-      break;
-    }
+    // case 6:{
+    //   printf("_event_syscall\n");
+    //   break;
+    // }
     default: panic("Unhandled event ID = %d", e.event);
   }
 
