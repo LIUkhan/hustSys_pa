@@ -217,6 +217,13 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           i+=form.step;
           break;
         }
+        case 'p': {
+          int num = va_arg(ap,int);//在函数内部转为ｕｉｎｔ
+          int nindex = strlen(out);
+          uori2a(num,nindex,out,&index,form,2);
+          i+=form.step;
+          break;
+        }
         case 'c':{
           int num = va_arg(ap,int);
           char cw = (char)num;
