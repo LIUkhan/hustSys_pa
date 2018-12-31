@@ -8,14 +8,14 @@ void vectrap();
 void vecnull();
 
 _Context* irq_handle(_Context *tf) {
-  _Context *next = tf;
+  _Context *next = tf;printf("0x%x\n",tf->irq);
   if (user_handler) {
     _Event ev = {0};
     switch (tf->irq) {
-      // case 0x80: {
-      //   ev.event = _EVENT_SYSCALL;
-      //   break;
-      // }
+      case 0x80: {
+        ev.event = _EVENT_SYSCALL;
+        break;
+      }
       case 0x81: {
         ev.event = _EVENT_YIELD; 
         break;
