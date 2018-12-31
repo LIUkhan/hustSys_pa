@@ -6,7 +6,6 @@ _Context* do_syscall(_Context *c) {
   a[0] = c->GPR1;
   printf("0x%x\n",a[0]);
   switch (a[0]) {
-    
     case SYS_yield: {
       _yield();
       c->GPR1 = 0;
