@@ -9,10 +9,10 @@ _Context* do_syscall(_Context *c) {
   a[3] = c->GPR4;
   printf("0x%x 0x%x 0x%x 0x%x\n",a[0],a[1],a[2],a[3]);
   switch (a[0]) {
-    //  case SYS_exit: {
-    //   // _halt();
-    //   break;
-    // }
+     case SYS_exit: {
+      _halt(c->GPR2);
+      break;
+    }
     case SYS_yield: {
       _yield();
       c->GPR1 = 0;
