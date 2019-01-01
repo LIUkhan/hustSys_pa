@@ -230,7 +230,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           if(form.width > 1)
           {
             int subres = form.width - 1;
-            if(form.addzero)
+            if(form.addzero)  
               for(int j = 0; j < subres; j++)
                 tempstr[j] = '0';
             else
