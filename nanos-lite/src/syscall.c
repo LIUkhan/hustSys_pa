@@ -27,10 +27,8 @@ _Context* do_syscall(_Context *c) {
         for(int i = 0; i < len; i++)
           _putc(buf[i]);
       }
-      printf("999\n");
-      // uint32_t bufsize = sizeof(buf);
-      // c->GPR1 = (len < bufsize) ? len : bufsize;
-       c->GPR1 = len;
+      uint32_t bufsize = sizeof(buf);
+      c->GPR1 = (len < bufsize) ? len : bufsize;
       break;
     }
     default: panic("Unhandled syscall ID = %d", a[0]);
