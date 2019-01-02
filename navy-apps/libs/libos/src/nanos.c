@@ -48,7 +48,25 @@ void *_sbrk(intptr_t increment){
   else
     return (void *)-1;
 }
+// void *_sbrk(intptr_t increment){
+//   if(!_program_break) {
+//     _program_break = (void *)_syscall_(SYS_brk, NULL, 0, 0);
+//     // printf("%08x", (int)_program_break);
+//   }
+//   if(increment == 0){
+//     return _program_break;
+//   }
+//   void *old = _program_break;
+//   void* new_addr = _program_break + increment;
+//   void *ret = (void *)_syscall_(SYS_brk, new_addr, 0, 0);
 
+//   if(old == ret){
+//     return (void*)-1;
+//   } else {
+//     _program_break = ret;
+//     return old;
+//   }
+// }
 int _read(int fd, void *buf, size_t count) {
   _exit(SYS_read);
   return 0;

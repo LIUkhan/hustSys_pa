@@ -1,6 +1,7 @@
 #include "common.h"
 #include "syscall.h"
 #include <unistd.h>
+extern char _end;
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -34,9 +35,10 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_brk: {
-      // intptr_t addr = c->GPR2;
+      intptr_t addr = c->GPR2;
       // int ret = brk((void *)addr);
-      // c->GPR1 = ret;
+      _heap.start = (void *)addr;
+      c->GPR1 = 0;
       break;
     }
     default: panic("Unhandled syscall ID = %d", a[0]);
@@ -44,3 +46,18 @@ _Context* do_syscall(_Context *c) {
 
   return c;
 }
+//      case SYS_brk: {
+//             // int increment = c->GPR2;
+//             _def(new_addr, 2, void*);
+//             if((void*)&_end < new_addr && new_addr < _heap.end) {
+//                 _heap.start = new_addr;
+//                 _set_ret(new_addr);
+//                 break;
+//                 // c->GPR1 = (size_t)old;
+//             } else {
+//                 void* old_addr = (void*)_heap.start;
+//                 _set_ret(old_addr);
+//                 break;
+//             }
+//             break;
+// }
