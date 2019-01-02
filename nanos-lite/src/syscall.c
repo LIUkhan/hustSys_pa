@@ -35,9 +35,6 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_brk: {
-      intptr_t addr = c->GPR2;
-      // int ret = brk((void *)addr);
-      _heap.start = (void *)addr;
       c->GPR1 = 0;
       break;
     }

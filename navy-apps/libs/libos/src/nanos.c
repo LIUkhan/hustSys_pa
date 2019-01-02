@@ -39,12 +39,12 @@ int _write(int fd, void *buf, size_t count){
   return ret;
 }
 
+static intptr_t program_break = &_end;
 void *_sbrk(intptr_t increment){
-  intptr_t oldpbrk = (intptr_t)&_end;
-  intptr_t newpbrk = increment + oldpbrk;
+  intptr_t newpbrk = increment + program_break;
   int ret = _syscall_(SYS_brk,newpbrk,0,0);
   if(ret == 0)
-    return (void *)oldpbrk;
+    return (void *)program_break;
   else
     return (void *)-1;
 }
