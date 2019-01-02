@@ -61,17 +61,17 @@ _Context* do_syscall(_Context *c) {
     }
     case SYS_read: {
       printf("SYS_read\n");
-      int fd = c->GPR1;
-      const char *buf  = (const char *)c->GPR2;
-      size_t count = c->GPR3;
+      int fd = c->GPR2;
+      const char *buf  = (const char *)c->GPR3;
+      size_t count = c->GPR4;
       c->GPR1 = fs_read(fd,(void *)buf,count);
       break;
     }
     case SYS_lseek: {
       printf("SYS_lseek\n");
-      int fd = c->GPR1;
-      off_t offset  = c->GPR2;
-      int whence = c->GPR3;
+      int fd = c->GPR2;
+      off_t offset  = c->GPR3;
+      int whence = c->GPR4;
       c->GPR1 = fs_lseek(fd, offset, whence);
       break;
     }
