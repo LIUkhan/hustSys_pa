@@ -54,10 +54,11 @@ size_t fs_read(int fd, void *buf, size_t len)
   assert(3 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
-  // size_t filesz = fs_filesz(fd);
+  size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
-  // assert(filesz >= file->open_offset + len);
+  assert(filesz >= file->open_offset + len);
   size_t ret = file->read(buf,p_offset,len);
+  Log("openoff:%d len:%d newopenoff:%d poff:%d",file->open_offset,len,file->open_offset + ret,p_offset);
   if(ret < 0)
     return ret;
   assert(ret == len);
