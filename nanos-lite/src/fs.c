@@ -1,4 +1,5 @@
 #include "fs.h"
+#include "proc.h"
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
@@ -7,9 +8,9 @@ typedef struct {
   char *name;
   size_t size;
   size_t disk_offset;
-  // off_t open_offset;  // 文件被打开之后的读写指针
   ReadFn read;
-  WriteFn write;
+  WriteFn write;  // 文件被打开之后的读写指针
+  size_t open_offset;  
 } Finfo;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB};
@@ -40,5 +41,78 @@ void init_fs() {
 
 size_t fs_filesz(int fd)
 {
+  return file_table[fd].size;
+}
 
+size_t fs_read(int fd, void *buf, size_t len)
+{
+  assert(3 <= fd && fd < NR_FILES);
+  //对应文件信息块起始地址
+  Finfo *file = &file_table[fd];
+  size_t filesz = fs_filesz(fd);
+  int p_offset = file->open_offset + file->disk_offset;
+  assert(filesz >= file->open_offset + len);
+  size_t ret = ramdisk_read(buf,p_offset,len);
+  if(ret < 0)
+    return ret;
+  assert(ret == len);
+  file->open_offset += ret;
+  return ret;
+}
+
+size_t fs_write(int fd, const void *buf, size_t len)
+{
+  assert(3 <= fd && fd < NR_FILES);
+  //对应文件信息块起始地址
+  Finfo *file = &file_table[fd];
+  size_t filesz = fs_filesz(fd);
+  int p_offset = file->open_offset + file->disk_offset;
+  assert(filesz >= file->open_offset + len);
+  size_t ret = ramdisk_write(buf,p_offset,len);
+  if(ret < 0)
+    return ret;
+  assert(ret == len);
+  file->open_offset += ret;
+  return ret;
+}
+//计算并改变对应文件的open_offset
+size_t fs_lseek(int fd, size_t offset, int whence)
+{
+  //对应文件信息块起始地址
+  Finfo *file = &file_table[fd];
+  size_t filesz = fs_filesz(fd);
+  size_t base;
+  switch(whence) {
+    case SEEK_SET: base = 0; break;
+    case SEEK_CUR: base = file->open_offset; break;
+    case SEEK_END: base = file->size; break;
+    default: panic("wrong whence!!!\n");
+  }
+  //根据whence和base确定新的open_offset,offset是相对位移，文件开头为０
+  size_t newaddr = base + offset;
+  // 边界控制
+  assert(newaddr >= 0);
+  assert(filesz >= newaddr);
+  file->open_offset = newaddr;
+  return newaddr;
+}
+
+int fs_open(const char *pathname, int flags, int mode)
+{
+  Log("opening %s", pathname);
+  for(int i = 0; i < NR_FILES; i++) {
+    Finfo *file = file_table + i;
+    if(strcmp(file->name, pathname) == 0) {
+      file->open_offset = 0;
+      Log("Success! File fd = %d", i);
+      return i;
+    }
+  }
+  return -1;
+}
+
+int fs_close(int fd)
+{
+  Log("closing %d", fd);
+  return 0;
 }
