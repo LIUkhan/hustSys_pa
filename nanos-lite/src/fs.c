@@ -37,6 +37,11 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+  for(int i = 3; i < NR_FILES; i++) {
+    file_table[i].read = ramdisk_read;
+    file_table[i].write = ramdisk_write;
+    file_table[i].open_offset = 0;
+  }
 }
 
 size_t fs_filesz(int fd)
@@ -52,7 +57,7 @@ size_t fs_read(int fd, void *buf, size_t len)
   size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
   assert(filesz >= file->open_offset + len);
-  size_t ret = ramdisk_read(buf,p_offset,len);
+  size_t ret = file->read(buf,p_offset,len);
   if(ret < 0)
     return ret;
   assert(ret == len);
@@ -68,7 +73,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
   size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
   assert(filesz >= file->open_offset + len);
-  size_t ret = ramdisk_write(buf,p_offset,len);
+  size_t ret = file->write(buf,p_offset,len);
   if(ret < 0)
     return ret;
   assert(ret == len);
