@@ -7,6 +7,7 @@ typedef struct {
   char *name;
   size_t size;
   size_t disk_offset;
+  // off_t open_offset;  // 文件被打开之后的读写指针
   ReadFn read;
   WriteFn write;
 } Finfo;
@@ -35,4 +36,9 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
+}
+
+size_t fs_filesz(int fd)
+{
+
 }
