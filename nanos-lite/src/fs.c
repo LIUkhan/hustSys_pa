@@ -84,7 +84,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
   //对应文件信息块起始地址
-  Finfo *file = file_table + fd;
+  Finfo *file = &file_table[fd];
   size_t filesz = fs_filesz(fd);
   size_t base;
   switch(whence) {
@@ -93,8 +93,11 @@ size_t fs_lseek(int fd, size_t offset, int whence)
     case SEEK_END: {base = file->size; break;}
     default: panic("wrong whence!!!\n");
   }
-  //根据whence和base确定新的open_offset,offset是相对位移，文件开头为０
   size_t newaddr = base + offset;
+  Log("lseek %d{size = %d, off=%d} with {offset=%d, whence=%d}, to %d", fd,
+  file->size, file->open_offset, offset, whence, newaddr);
+  //根据whence和base确定新的open_offset,offset是相对位移，文件开头为０
+  
   // 边界控制
   assert(newaddr >= 0);
   assert(filesz >= newaddr);
