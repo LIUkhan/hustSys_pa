@@ -84,7 +84,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
   //对应文件信息块起始地址
-  Finfo *file = &file_table[fd];
+  Finfo *file = file_table + fd;
   size_t filesz = fs_filesz(fd);
   size_t base;
   switch(whence) {
