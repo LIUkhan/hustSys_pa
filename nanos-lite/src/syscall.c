@@ -1,5 +1,6 @@
 #include "common.h"
 #include "syscall.h"
+#include <unistd.h>
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -31,6 +32,12 @@ _Context* do_syscall(_Context *c) {
       c->GPR1 = (len < bufsize) ? len : bufsize;
       break;
     }
+    // case SYS_brk: {
+    //   intptr_t newpbrk = c->GPR2;
+    //   int ret = brk((void *)newpbrk);
+    //   c->GPR1 = ret;
+    //   break;
+    // }
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
