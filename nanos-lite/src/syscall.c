@@ -48,6 +48,7 @@ _Context* do_syscall(_Context *c) {
       const char *filename  = (const char *)c->GPR2;
       int flags = c->GPR3;
       mode_t mode = c->GPR4;
+      printf("%s\n",filename);
       c->GPR1 = fs_open(filename, flags, mode);
       break;
     }

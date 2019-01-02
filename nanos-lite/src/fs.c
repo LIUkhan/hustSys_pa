@@ -88,9 +88,9 @@ size_t fs_lseek(int fd, size_t offset, int whence)
   size_t filesz = fs_filesz(fd);
   size_t base;
   switch(whence) {
-    case SEEK_SET: base = 0; break;
-    case SEEK_CUR: base = file->open_offset; break;
-    case SEEK_END: base = file->size; break;
+    case SEEK_SET: {base = 0; break;}
+    case SEEK_CUR: {base = file->open_offset; break;}
+    case SEEK_END: {base = file->size; break;}
     default: panic("wrong whence!!!\n");
   }
   //根据whence和base确定新的open_offset,offset是相对位移，文件开头为０
