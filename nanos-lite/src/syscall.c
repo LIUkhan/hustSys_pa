@@ -28,17 +28,17 @@ _Context* do_syscall(_Context *c) {
         for(int i = 0; i < len; i++)
           _putc(buf[i]);
       }
-      Log("%s",buf);
+      // Log("%s",buf);
       uint32_t bufsize = sizeof(buf);
       c->GPR1 = (len < bufsize) ? len : bufsize;
       break;
     }
-    // case SYS_brk: {
-    //   intptr_t newpbrk = c->GPR2;
-    //   int ret = brk((void *)newpbrk);
-    //   c->GPR1 = ret;
-    //   break;
-    // }
+    case SYS_brk: {
+      // intptr_t addr = c->GPR2;
+      // int ret = brk((void *)addr);
+      // c->GPR1 = ret;
+      break;
+    }
     default: panic("Unhandled syscall ID = %d", a[0]);
   }
 
