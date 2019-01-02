@@ -40,6 +40,7 @@ int _write(int fd, void *buf, size_t count){
 }
 
 static intptr_t program_break = (intptr_t)&_end;
+
 void *_sbrk(intptr_t increment){
   intptr_t oldpbrk = program_break;
   intptr_t newpbrk = increment + program_break;

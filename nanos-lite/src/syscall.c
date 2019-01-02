@@ -29,9 +29,9 @@ _Context* do_syscall(_Context *c) {
         for(int i = 0; i < len; i++)
           _putc(buf[i]);
       }
-      Log("%s",buf);
-      uint32_t bufsize = sizeof(buf);
-      c->GPR1 = (len < bufsize) ? len : bufsize;
+      // Log("%s",buf);
+      // uint32_t bufsize = sizeof(buf);
+      c->GPR1 = len;//(len < bufsize) ? len : bufsize;
       break;
     }
     case SYS_brk: {
