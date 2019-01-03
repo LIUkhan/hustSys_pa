@@ -41,7 +41,12 @@ static Finfo file_table[] __attribute__((used)) = {
 void init_fs() {
   // TODO: initialize the size of /dev/fb
   file_table[3].size = screen_height()*screen_width()*sizeof(int);
+  file_table[0].open_offset = 0; 
+  file_table[1].open_offset = 0; 
+  file_table[2].open_offset = 0; 
   file_table[3].open_offset = 0; 
+  file_table[4].open_offset = 0; 
+  file_table[5].open_offset = 0; 
   for(int i = 6; i < NR_FILES; i++) {
     file_table[i].read = ramdisk_read;
     file_table[i].write = ramdisk_write;
