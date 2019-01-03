@@ -27,12 +27,12 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
-  {"stdin", 0x7fffffff, 0, invalid_read, invalid_write},
-  {"stdout", 0x7fffffff, 0, invalid_read, serial_write},
-  {"stderr", 0x7fffffff, 0, invalid_read, serial_write},
+  {"stdin", 0, 0, invalid_read, invalid_write},
+  {"stdout", 0, 0, invalid_read, serial_write},
+  {"stderr", 0, 0, invalid_read, serial_write},
   {"/dev/fb", 0, 0,invalid_read,fb_write},
   {"/proc/dispinfo", 0, 0,dispinfo_read,invalid_write},
-  {"/dev/events", 0x7fffffff, 0, events_read, invalid_write},
+  {"/dev/events", 0, 0, events_read, invalid_write},
 #include "files.h"
 };
 
@@ -64,6 +64,10 @@ size_t fs_read(int fd, void *buf, size_t len)
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
+  if(fd == 0 || fd == 1 || fd == 2 || fd == 5) {
+    size_t ret = file->read(buf,0,len);
+    return ret;
+  }
   size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
   int rest = file->size - file->open_offset;
@@ -83,6 +87,10 @@ size_t fs_write(int fd, const void *buf, size_t len)
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
+  if(fd == 0 || fd == 1 || fd == 2 || fd == 5) {
+    size_t ret = file->write(buf,0,len);
+    return ret;
+  }
   size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
   int rest = file->size - file->open_offset;
