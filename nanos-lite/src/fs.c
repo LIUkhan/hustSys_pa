@@ -61,6 +61,7 @@ size_t fs_filesz(int fd)
 
 size_t fs_read(int fd, void *buf, size_t len)
 {
+  printf("read\n");
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
@@ -73,13 +74,14 @@ size_t fs_read(int fd, void *buf, size_t len)
   assert(filesz >= file->open_offset + len);
   size_t ret = file->read(buf,p_offset,len);
   // Log("read %d openoff:%d len:%d newopenoff:%d poff:%d",fd,file->open_offset,len,file->open_offset + ret,p_offset);
-  //  if(ret >= 0)
-  //   file->open_offset += ret;
+   if(ret >= 0)
+    file->open_offset += ret;
   return ret;
 }
 
 size_t fs_write(int fd, const void *buf, size_t len)
 {
+  printf("write\n");
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
