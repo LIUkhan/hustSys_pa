@@ -23,19 +23,22 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_write: {
+
       uintptr_t fd = c->GPR2;
       const char *buf = (const char *)(c->GPR3);
       size_t len = c->GPR4;
       c->GPR1 = fs_write(fd,(void *)buf,len);
+      //  printf("SYS_write\n");
       break;
     }
     case SYS_brk: {
+      //  printf("SYS_brk\n");
       c->GPR1 = 0;
       break;
     }
     case SYS_open: {
       // printf("SYS_open\n");
-      const char *filename  = (const char *)c->GPR2;
+      const char *filename  = (const char *)(c->GPR2);
       int flags = c->GPR3;
       mode_t mode = c->GPR4;
       c->GPR1 = fs_open(filename, flags, mode);

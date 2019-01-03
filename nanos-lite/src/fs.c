@@ -61,11 +61,12 @@ size_t fs_filesz(int fd)
 
 size_t fs_read(int fd, void *buf, size_t len)
 {
+  // Log("read");
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
   if(fd == 0 || fd == 1 || fd == 2 || fd == 5) {
-    size_t ret = file->read(buf,0,len);
+    size_t ret = file->read(buf,file->open_offset,len);
     return ret;
   }
   size_t filesz = fs_filesz(fd);
@@ -84,11 +85,13 @@ size_t fs_read(int fd, void *buf, size_t len)
 
 size_t fs_write(int fd, const void *buf, size_t len)
 {
+  // Log("write %d",fd);
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
   if(fd == 0 || fd == 1 || fd == 2 || fd == 5) {
-    size_t ret = file->write(buf,0,len);
+    size_t ret = file->write(buf,file->open_offset,len);
+    // Log("ret:%d",ret);
     return ret;
   }
   size_t filesz = fs_filesz(fd);
@@ -106,6 +109,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
 //计算并改变对应文件的open_offset
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
+  // Log("lseek");
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
   size_t filesz = fs_filesz(fd);
@@ -128,22 +132,22 @@ size_t fs_lseek(int fd, size_t offset, int whence)
 
 int fs_open(const char *pathname, int flags, int mode)
 {
-  Log("opening %s", pathname);
+  // Log("opening %s", pathname);
   for(int i = 0; i < NR_FILES; i++) {
     Finfo *file = file_table + i;
     if(strcmp(file->name, pathname) == 0) {
       file->open_offset = 0;
-      Log("Success! File fd = %d", i);
+      // Log("Success! File fd = %d", i);
       return i;
     }
   }
-  Log("Failure!");
+  // Log("Failure!");
   return -1;
 }
 
 int fs_close(int fd)
 {
-  Log("closing %d", fd);
+  // Log("closing %d", fd);
   return 0;
 }
 

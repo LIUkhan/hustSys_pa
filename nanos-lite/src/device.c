@@ -7,7 +7,7 @@ extern void setsize(int,size_t);
 size_t serial_write(const void *buf, size_t offset, size_t len) {
   for(int i = 0; i < len; i++)
     _putc(((char*)buf)[i]);
-  return 0;
+  return len;
 }
 
 #define NAME(key) \
@@ -45,8 +45,8 @@ size_t events_read(void *buf, size_t offset, size_t len) {
 static char dispinfo[128] __attribute__((used));
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
-  assert(offset <= 128);
-  if(len + offset >= 128)
+  assert(offset < 128);
+  if(len + offset > 128)
     len = 128 - offset;
   memcpy(buf, dispinfo + offset, len);
   return len;
@@ -69,6 +69,6 @@ void init_device() {
   int w = screen_width();
   int h = screen_height();
   //提前写入到字符串中
-  int sz = sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d", w, h);
+  int sz = sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d\n", w, h);
   setsize(4,sz);
 }
