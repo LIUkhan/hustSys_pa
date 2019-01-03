@@ -296,11 +296,12 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
   char buf[65535];
   va_start(ap,fmt);
   int cnt = vsprintf(buf,fmt,ap);
-  printf("%d\n",cnt);
+  _putc('1');
   if(cnt > n) {
     buf[n-1] = '\0';
     cnt = n;
   }
+  _putc('2');
   strcpy(out,buf);
   va_end(ap);
   return cnt;
