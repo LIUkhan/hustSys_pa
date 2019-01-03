@@ -290,20 +290,15 @@ int sprintf(char *out, const char *fmt, ...) {
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
-  _putc('c');
   if(out == NULL)
     return -1;
   va_list ap;
-  char buf[65535];
   va_start(ap,fmt);
-  int cnt = vsprintf(buf,fmt,ap);
-  _putc('1');
-  if(cnt > n) {
-    buf[n-1] = '\0';
-    cnt = n;
+  int cnt = vsprintf(out,fmt,ap);
+  if(cnt >= n) {
+    out[n-1] = '\0';
+    cnt = n-1;
   }
-  _putc('2');
-  strcpy(out,buf);
   va_end(ap);
   return cnt;
 }
