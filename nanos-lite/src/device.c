@@ -30,14 +30,14 @@ size_t events_read(void *buf, size_t offset, size_t len) {
     //取出名字
     const char *name = keyname[keycode];
     int n = snprintf(buf,len,"%s %s\n", k, name);
-    printf("%s",buf);
+    // printf("%s",buf);
     assert(n <= len);
     return n;
   } 
   else { //时间事件
     uint32_t time = uptime();
     int n = snprintf(buf,len,"t %d\n", time);
-    printf("%s",buf);
+    // printf("%s",buf);
     return n;
   }
 }
