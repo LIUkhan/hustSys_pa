@@ -25,7 +25,6 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_write: {
-
       uintptr_t fd = c->GPR2;
       const char *buf = (const char *)(c->GPR3);
       size_t len = c->GPR4;
