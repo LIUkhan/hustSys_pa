@@ -24,20 +24,9 @@ _Context* do_syscall(_Context *c) {
     }
     case SYS_write: {
       uintptr_t fd = c->GPR2;
-      char *buf = (char *)(c->GPR3);
-      uintptr_t len = c->GPR4;
-      //stdout stderr
-      // if(fd == 0)
-      //   assert(0);
-      // else if(fd == 1 || fd == 2) {
-      //   for(int i = 0; i < len; i++)
-      //     _putc(buf[i]);
-      //   c->GPR1 = len;
-      //   // Log("%s",buf);
-      // }
-      // else {
+      const char *buf = (const char *)(c->GPR3);
+      size_t len = c->GPR4;
       c->GPR1 = fs_write(fd,(void *)buf,len);
-      // }
       break;
     }
     case SYS_brk: {
