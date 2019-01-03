@@ -26,16 +26,16 @@ static char dispinfo[128] __attribute__((used));
 
 size_t dispinfo_read(void *buf, size_t offset, size_t len) {
   assert(offset <= 128);
-  if(len > 128 - offset)
+  if(len + offset >= 128)
     len = 128 - offset;
   memcpy(buf, dispinfo + offset, len);
   return len;
 }
 
 size_t fb_write(const void *buf, size_t offset, size_t len) {
-  offset /= 8;
-  int x = offset % screen_width();
-  int y = offset / screen_height();
+  offset /= 4;
+  int x = offset % screen_height();
+  int y = offset / screen_width();
   draw_rect((uint32_t *)buf,x,y,len/4,1);
   return len;
 }
