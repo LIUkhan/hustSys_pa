@@ -45,7 +45,7 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_open: {
-      printf("SYS_open\n");
+      // printf("SYS_open\n");
       const char *filename  = (const char *)c->GPR2;
       int flags = c->GPR3;
       mode_t mode = c->GPR4;
@@ -54,13 +54,13 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_close: {
-      printf("SYS_close\n");
+      // printf("SYS_close\n");
       int fd = c->GPR2;
       c->GPR1 = fs_close(fd);
       break;
     }
     case SYS_read: {
-      printf("SYS_read\n");
+      // printf("SYS_read\n");
       int fd = c->GPR2;
       const char *buf  = (const char *)c->GPR3;
       size_t count = c->GPR4;
@@ -68,7 +68,7 @@ _Context* do_syscall(_Context *c) {
       break;
     }
     case SYS_lseek: {
-      printf("SYS_lseek\n");
+      // printf("SYS_lseek\n");
       int fd = c->GPR2;
       off_t offset  = c->GPR3;
       int whence = c->GPR4;

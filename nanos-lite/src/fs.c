@@ -60,13 +60,11 @@ size_t fs_read(int fd, void *buf, size_t len)
   if(len > rest) {
     len = rest;
   }
-  Log("openoff:%d len:%d",file->open_offset,len);
   assert(filesz >= file->open_offset + len);
   size_t ret = file->read(buf,p_offset,len);
   Log("openoff:%d len:%d newopenoff:%d poff:%d",file->open_offset,len,file->open_offset + ret,p_offset);
   if(ret < 0)
     return ret;
-  assert(ret == len);
   file->open_offset += ret;
   return ret;
 }
@@ -86,7 +84,6 @@ size_t fs_write(int fd, const void *buf, size_t len)
   size_t ret = file->write(buf,p_offset,len);
   if(ret < 0)
     return ret;
-  assert(ret == len);
   file->open_offset += ret;
   return ret;
 }
@@ -104,7 +101,7 @@ size_t fs_lseek(int fd, size_t offset, int whence)
     default: panic("wrong whence!!!\n");
   }
   size_t newaddr = base + offset;
-  Log("lseek %d{size = %d, off=%d} with {offset=%d, whence=%d}, to %d", fd,
+  Log("lseek fd:%d(size:%d, off:%d)(offset:%d, whence:%d) to %d", fd,
   file->size, file->open_offset, offset, whence, newaddr);
   //根据whence和base确定新的open_offset,offset是相对位移，文件开头为０
   
