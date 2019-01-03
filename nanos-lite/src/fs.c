@@ -32,7 +32,7 @@ static Finfo file_table[] __attribute__((used)) = {
   {"stderr", 0, 0, invalid_read, serial_write},
   {"/dev/fb", 0, 0,invalid_read,fb_write},
   {"/proc/dispinfo", 0, 0,dispinfo_read,invalid_write},
-  {"/dev/events", 0, 0, invalid_read, invalid_write},
+  {"/dev/events", 0, 0, events_read, invalid_write},
 #include "files.h"
 };
 
@@ -84,9 +84,27 @@ size_t fs_write(int fd, const void *buf, size_t len)
     len = rest;
   assert(filesz >= file->open_offset + len);
   size_t ret = file->write(buf,p_offset,len);
-  file->open_offset += len;
+  file->open_offset += ret;
   return ret;
 }
+// size_t vfs_write(int fd, const void *buf, size_t size) {
+//     assert(0 <= fd && fd < NR_FILES);
+//     Finfo *h = file_table + fd;
+//     int offset = h->open_offset + h->disk_offset;
+//     int delta = h->write(buf, offset, size);
+//     if(delta < 0) {
+//         panic("wtf");
+//         return delta;
+//     }
+//     if(size != delta) {
+//         Log("write %d from %d to %d[%d]", fd, h->open_offset, h->open_offset + delta,
+//             size);
+//     }
+//     assert(size == delta);
+//     h->open_offset += delta;
+//     assert(h->open_offset <= h->size);
+//     return delta;
+// }
 //计算并改变对应文件的open_offset
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
