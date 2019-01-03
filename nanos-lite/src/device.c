@@ -20,7 +20,6 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) {
   int keycode = read_key();
-  printf("len:%d\n",len);
   const char *k = "ku";
   //检查当前是什么键盘状态,检查是否被按下，如果是，取出keycode
   if(keycode & 0x8000) {
@@ -31,12 +30,14 @@ size_t events_read(void *buf, size_t offset, size_t len) {
     //取出名字
     const char *name = keyname[keycode];
     int n = sprintf(buf, "%s %s\n", k, name);
+    printf("%s\n",buf);
     assert(n <= len);
     return n;
   } 
   else { //时间事件
     uint32_t time = uptime();
     int n = sprintf(buf, "t %d\n", time);
+    printf("%s\n",buf);
     return n;
   }
 }
