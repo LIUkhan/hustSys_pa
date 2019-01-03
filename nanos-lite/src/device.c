@@ -36,7 +36,9 @@ size_t events_read(void *buf, size_t offset, size_t len) {
   } 
   else { //时间事件
     uint32_t time = uptime();
+    printf("1\n");
     int n = snprintf(buf, len, "t %d\n", time);
+    printf("2\n");
     return n;
   }
 }
