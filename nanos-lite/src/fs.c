@@ -79,12 +79,12 @@ size_t fs_write(int fd, const void *buf, size_t len)
   Finfo *file = &file_table[fd];
   size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
-  // int rest = file->size - file->open_offset;
-  // if(len > rest)
-  //   len = rest;
+  int rest = file->size - file->open_offset;
+  if(len > rest)
+    len = rest;
   assert(filesz >= file->open_offset + len);
   size_t ret = file->write(buf,p_offset,len);
-  file->open_offset += ret;
+  file->open_offset += len;
   return ret;
 }
 //计算并改变对应文件的open_offset
