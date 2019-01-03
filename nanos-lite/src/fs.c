@@ -68,7 +68,8 @@ size_t fs_read(int fd, void *buf, size_t len)
   assert(filesz >= file->open_offset + len);
   size_t ret = file->read(buf,p_offset,len);
   // Log("read %d openoff:%d len:%d newopenoff:%d poff:%d",fd,file->open_offset,len,file->open_offset + ret,p_offset);
-  file->open_offset += ret;
+   if(ret >= 0)
+    file->open_offset += ret;
   return ret;
 }
 
@@ -84,27 +85,11 @@ size_t fs_write(int fd, const void *buf, size_t len)
     len = rest;
   assert(filesz >= file->open_offset + len);
   size_t ret = file->write(buf,p_offset,len);
-  file->open_offset += ret;
+  if(ret >= 0)
+    file->open_offset += ret;
   return ret;
 }
-// size_t vfs_write(int fd, const void *buf, size_t size) {
-//     assert(0 <= fd && fd < NR_FILES);
-//     Finfo *h = file_table + fd;
-//     int offset = h->open_offset + h->disk_offset;
-//     int delta = h->write(buf, offset, size);
-//     if(delta < 0) {
-//         panic("wtf");
-//         return delta;
-//     }
-//     if(size != delta) {
-//         Log("write %d from %d to %d[%d]", fd, h->open_offset, h->open_offset + delta,
-//             size);
-//     }
-//     assert(size == delta);
-//     h->open_offset += delta;
-//     assert(h->open_offset <= h->size);
-//     return delta;
-// }
+
 //计算并改变对应文件的open_offset
 size_t fs_lseek(int fd, size_t offset, int whence)
 {
