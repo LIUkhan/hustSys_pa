@@ -86,7 +86,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
   assert(filesz >= file->open_offset + len);
   size_t ret = file->write(buf,p_offset,len);
   if(ret >= 0)
-    file->open_offset += ret;
+    file->open_offset += ret/4;
   return ret;
 }
 
