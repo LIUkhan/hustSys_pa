@@ -290,6 +290,7 @@ int sprintf(char *out, const char *fmt, ...) {
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) {
+  _putc('c');
   if(out == NULL)
     return -1;
   va_list ap;
