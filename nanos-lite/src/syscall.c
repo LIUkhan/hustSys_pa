@@ -16,7 +16,7 @@ _Context* do_syscall(_Context *c) {
      case SYS_exit: {
       //  uintptr_t status = c->GPR2;
       // _halt(status);
-      execve("bin/init",NULL,NULL);
+      execve("/bin/init",NULL,NULL);
       break;
     }
     case SYS_yield: {
