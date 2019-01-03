@@ -20,6 +20,7 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) {
   int keycode = read_key();
+  printf("len:%d\n",len);
   const char *k = "ku";
   //检查当前是什么键盘状态,检查是否被按下，如果是，取出keycode
   if(keycode & 0x8000) {
