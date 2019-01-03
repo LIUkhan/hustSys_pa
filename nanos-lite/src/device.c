@@ -19,7 +19,25 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t offset, size_t len) {
-  return 0;
+  int keycode = read_key();
+  const char *k = "ku";
+  //检查当前是什么键盘状态,检查是否被按下，如果是，取出keycode
+  if(keycode & 0x8000) {
+    keycode = keycode & 0x7fff;
+    k = "kd";
+  }
+  if(keycode != _KEY_NONE) {
+    //取出名字
+    const char *name = keyname[keycode];
+    int n = snprintf(buf, len, "%s %s\n", k, name);
+    assert(n <= len);
+    return n;
+  } 
+  else { //时间事件
+    uint32_t time = uptime();
+    int n = snprintf(buf, len, "t %d\n", time);
+    return n;
+  }
 }
 
 static char dispinfo[128] __attribute__((used));

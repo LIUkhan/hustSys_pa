@@ -295,12 +295,14 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
   va_list ap;
   char buf[65535];
   va_start(ap,fmt);
-  vsprintf(buf,fmt,ap);
-  if(strlen(buf) > n)
-    buf[n] = '\0';
+  int cnt = vsprintf(buf,fmt,ap);
+  if(cnt >= n) {
+    buf[n-1] = '\0';
+    cnt = n;
+  }
   strcpy(out,buf);
   va_end(ap);
-  return n;
+  return cnt;
 }
 
 #endif
