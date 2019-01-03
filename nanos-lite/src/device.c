@@ -69,6 +69,6 @@ void init_device() {
   int w = screen_width();
   int h = screen_height();
   //提前写入到字符串中
-  int sz = sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d", w, h);
+  int sz = sprintf(dispinfo, "WIDTH:%d\nHEIGHT:%d\n", w, h);
   setsize(4,sz);
 }
