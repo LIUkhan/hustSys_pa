@@ -3,6 +3,7 @@
 #include "fs.h"
 #include <sys/types.h>
 extern char _end;
+extern int execve(const char *,char *,char *);
 
 _Context* do_syscall(_Context *c) {
   uintptr_t a[4];
@@ -13,8 +14,9 @@ _Context* do_syscall(_Context *c) {
   // printf("0x%x 0x%x 0x%x 0x%x\n",a[0],a[1],a[2],a[3]);
   switch (a[0]) {
      case SYS_exit: {
-       uintptr_t status = c->GPR2;
-      _halt(status);
+      //  uintptr_t status = c->GPR2;
+      // _halt(status);
+      execve("bin/init",NULL,NULL);
       break;
     }
     case SYS_yield: {
@@ -65,6 +67,10 @@ _Context* do_syscall(_Context *c) {
       int whence = c->GPR4;
       c->GPR1 = fs_lseek(fd, offset, whence);
       break;
+    }
+    case SYS_execve: {
+       execve((const char *)a[1],(char *)a[2],(char *)a[3]);
+       break;
     }
     default: panic("Unhandled syscall ID = %d", a[0]);
   }

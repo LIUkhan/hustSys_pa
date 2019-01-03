@@ -28,3 +28,10 @@ void init_proc() {
 _Context* schedule(_Context *prev) {
   return NULL;
 }
+
+
+int execve(const char * filename,char * const argv[ ],char * const envp[ ])
+{
+  naive_uload(NULL, filename);
+  return 0;
+}

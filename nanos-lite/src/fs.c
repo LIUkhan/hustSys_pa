@@ -33,6 +33,7 @@ static Finfo file_table[] __attribute__((used)) = {
   {"/dev/fb", 0, 0,invalid_read,fb_write},
   {"/proc/dispinfo", 0, 0,dispinfo_read,invalid_write},
   {"/dev/events", 0, 0, events_read, invalid_write},
+  {"/dev/tty", 0, 0, invalid_read, serial_write},
 #include "files.h"
 };
 
@@ -47,7 +48,8 @@ void init_fs() {
   file_table[3].open_offset = 0; 
   file_table[4].open_offset = 0; 
   file_table[5].open_offset = 0; 
-  for(int i = 6; i < NR_FILES; i++) {
+  file_table[6].open_offset = 0; 
+  for(int i = 7; i < NR_FILES; i++) {
     file_table[i].read = ramdisk_read;
     file_table[i].write = ramdisk_write;
     file_table[i].open_offset = 0;
@@ -65,7 +67,7 @@ size_t fs_read(int fd, void *buf, size_t len)
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
-  if(fd == 0 || fd == 1 || fd == 2 || fd == 5) {
+  if(fd == 0 || fd == 1 || fd == 2 || fd == 5 || fd == 6) {
     size_t ret = file->read(buf,file->open_offset,len);
     return ret;
   }
@@ -89,7 +91,7 @@ size_t fs_write(int fd, const void *buf, size_t len)
   assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
-  if(fd == 0 || fd == 1 || fd == 2 || fd == 5) {
+  if(fd == 0 || fd == 1 || fd == 2 || fd == 5 || fd == 6) {
     size_t ret = file->write(buf,file->open_offset,len);
     // Log("ret:%d",ret);
     return ret;
@@ -147,7 +149,7 @@ int fs_open(const char *pathname, int flags, int mode)
 
 int fs_close(int fd)
 {
-  // Log("closing %d", fd);
+  Log("closing %d", fd);
   return 0;
 }
 
