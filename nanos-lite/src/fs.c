@@ -28,8 +28,11 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
   {"stdin", 0, 0, invalid_read, invalid_write},
-  {"stdout", 0, 0, invalid_read, invalid_write},
-  {"stderr", 0, 0, invalid_read, invalid_write},
+  {"stdout", 0, 0, invalid_read, serial_write},
+  {"stderr", 0, 0, invalid_read, serial_write},
+  {"/dev/fb", 0, 0,invalid_read,fb_write},
+  {"/proc/dispinfo", 0, 0,dispinfo_read,invalid_write},
+  {"/dev/events", 0, 0, invalid_read, invalid_write},
 #include "files.h"
 };
 
@@ -37,7 +40,9 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
   // TODO: initialize the size of /dev/fb
-  for(int i = 3; i < NR_FILES; i++) {
+  file_table[3].size = screen_height()*screen_width()*sizeof(int);
+  file_table[3].open_offset = 0; 
+  for(int i = 6; i < NR_FILES; i++) {
     file_table[i].read = ramdisk_read;
     file_table[i].write = ramdisk_write;
     file_table[i].open_offset = 0;
@@ -51,7 +56,7 @@ size_t fs_filesz(int fd)
 
 size_t fs_read(int fd, void *buf, size_t len)
 {
-  assert(3 <= fd && fd < NR_FILES);
+  assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
   size_t filesz = fs_filesz(fd);
@@ -62,7 +67,7 @@ size_t fs_read(int fd, void *buf, size_t len)
   }
   assert(filesz >= file->open_offset + len);
   size_t ret = file->read(buf,p_offset,len);
-  Log("openoff:%d len:%d newopenoff:%d poff:%d",file->open_offset,len,file->open_offset + ret,p_offset);
+  // Log("read %d openoff:%d len:%d newopenoff:%d poff:%d",fd,file->open_offset,len,file->open_offset + ret,p_offset);
   if(ret < 0)
     return ret;
   file->open_offset += ret;
@@ -71,15 +76,14 @@ size_t fs_read(int fd, void *buf, size_t len)
 
 size_t fs_write(int fd, const void *buf, size_t len)
 {
-  assert(3 <= fd && fd < NR_FILES);
+  assert(0 <= fd && fd < NR_FILES);
   //对应文件信息块起始地址
   Finfo *file = &file_table[fd];
   size_t filesz = fs_filesz(fd);
   int p_offset = file->open_offset + file->disk_offset;
   int rest = file->size - file->open_offset;
-  if(len > rest) {
+  if(len > rest)
     len = rest;
-  }
   assert(filesz >= file->open_offset + len);
   size_t ret = file->write(buf,p_offset,len);
   if(ret < 0)
@@ -100,11 +104,9 @@ size_t fs_lseek(int fd, size_t offset, int whence)
     case SEEK_END: {base = file->size; break;}
     default: panic("wrong whence!!!\n");
   }
-  size_t newaddr = base + offset;
-  Log("lseek fd:%d(size:%d, off:%d)(offset:%d, whence:%d) to %d", fd,
-  file->size, file->open_offset, offset, whence, newaddr);
   //根据whence和base确定新的open_offset,offset是相对位移，文件开头为０
-  
+  size_t newaddr = base + offset;
+  // Log("lseek fd:%d size:%d, off:%d offset:%d, whence:%d to %d", fd,file->size, file->open_offset, offset, whence, newaddr);
   // 边界控制
   assert(newaddr >= 0);
   assert(filesz >= newaddr);
@@ -123,6 +125,7 @@ int fs_open(const char *pathname, int flags, int mode)
       return i;
     }
   }
+  Log("Failure!");
   return -1;
 }
 
@@ -130,4 +133,9 @@ int fs_close(int fd)
 {
   Log("closing %d", fd);
   return 0;
+}
+
+void setsize(int fd,size_t size)
+{
+  file_table[fd].size = size;
 }

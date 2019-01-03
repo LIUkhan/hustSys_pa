@@ -27,17 +27,17 @@ _Context* do_syscall(_Context *c) {
       char *buf = (char *)(c->GPR3);
       uintptr_t len = c->GPR4;
       //stdout stderr
-      if(fd == 0)
-        assert(0);
-      else if(fd == 1 || fd == 2) {
-        for(int i = 0; i < len; i++)
-          _putc(buf[i]);
-        c->GPR1 = len;
-        // Log("%s",buf);
-      }
-      else {
-        c->GPR1 = fs_write(fd,(void *)buf,len);
-      }
+      // if(fd == 0)
+      //   assert(0);
+      // else if(fd == 1 || fd == 2) {
+      //   for(int i = 0; i < len; i++)
+      //     _putc(buf[i]);
+      //   c->GPR1 = len;
+      //   // Log("%s",buf);
+      // }
+      // else {
+      c->GPR1 = fs_write(fd,(void *)buf,len);
+      // }
       break;
     }
     case SYS_brk: {
@@ -49,7 +49,6 @@ _Context* do_syscall(_Context *c) {
       const char *filename  = (const char *)c->GPR2;
       int flags = c->GPR3;
       mode_t mode = c->GPR4;
-      printf("%s\n",filename);
       c->GPR1 = fs_open(filename, flags, mode);
       break;
     }
