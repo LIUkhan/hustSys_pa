@@ -73,10 +73,10 @@ size_t fs_read(int fd, void *buf, size_t len)
   assert(filesz >= file->open_offset + len);
   size_t ret = file->read(buf,p_offset,len);
   // Log("read %d openoff:%d len:%d newopenoff:%d poff:%d",fd,file->open_offset,len,file->open_offset + ret,p_offset);
- 
-  ret /= 2; printf("%d\n",ret);
+  printf("%d  ",file->open_offset);
    if(ret >= 0)
     file->open_offset += ret;
+  printf("%d\n",file->open_offset);
   return ret;
 }
 
