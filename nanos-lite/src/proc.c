@@ -14,7 +14,7 @@ void hello_fun(void *arg) {
   int j = 1;
   while (1) {
     Log("Hello World from Nanos-lite for the %dth time!", j);
-    j ++;
+    j++;
     _yield();
   }
 }
@@ -30,8 +30,7 @@ _Context* schedule(_Context *prev) {
 }
 
 
-int execve(const char * filename,char * const argv[ ],char * const envp[ ])
+void execve(const char * filename,char * const argv[ ],char * const envp[ ])
 {
   naive_uload(NULL, filename);
-  return 0;
 }
