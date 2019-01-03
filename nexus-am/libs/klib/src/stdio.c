@@ -296,7 +296,8 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
   char buf[65535];
   va_start(ap,fmt);
   int cnt = vsprintf(buf,fmt,ap);
-  if(cnt >= n) {
+  printf("%d\n",cnt);
+  if(cnt > n) {
     buf[n-1] = '\0';
     cnt = n;
   }
