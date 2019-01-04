@@ -8,13 +8,22 @@ extern uint32_t pio_read_l(ioaddr_t);
 extern void pio_write_b(ioaddr_t, uint32_t);
 extern void pio_write_w(ioaddr_t, uint32_t);
 extern void pio_write_l(ioaddr_t, uint32_t);
-
+extern void raise_intr(uint8_t, vaddr_t);
 
 make_EHelper(lidt) {
-  TODO();
-
+  // TODO();
+  rtlreg_t baseaddr,mask,cons;
+  rtl_li(&cons,2);
+  rtl_li(&mask,0xffffff);
+  rtl_lm(&cpu.IDTR.limit, &(id_dest->val), 2);
+  rtl_add(&baseaddr, &id_dest->addr,&cons);
+  rtl_lm(&cpu.IDTR.base, &baseaddr, 4);
+  if(decoding.is_operand_size_16)   
+    rtl_and(&cpu.IDTR.base,&cpu.IDTR.base,&mask);
+  // printf("lidt\n");
   print_asm_template1(lidt);
 }
+
 
 make_EHelper(mov_r2cr) {
   TODO();
@@ -33,19 +42,35 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  TODO();
-
+  // TODO();
+  //必须是立即数类型的
+  assert(id_dest->type == OP_TYPE_IMM);
+  raise_intr(id_dest->val, decoding.seq_eip);
   print_asm("int %s", id_dest->str);
-
 #if defined(DIFF_TEST) && defined(DIFF_TEST_QEMU)
   difftest_skip_dut();
 #endif
 }
 
 make_EHelper(iret) {
-  TODO();
-
+  // TODO();
+  rtlreg_t EIP, CS, EFLAGS;
+	rtl_pop(&EIP);
+	rtl_pop(&CS);
+	rtl_pop(&EFLAGS);
+	rtl_mv(&cpu.eflags.content, &EFLAGS);
+	assert(CS == 8);
+  rtl_jr(&EIP);
   print_asm("iret");
+}
+
+make_EHelper(stos)
+{
+  rtlreg_t ax;
+  rtl_li(&ax,cpu.gpr[R_EAX]._16);
+  rtl_sm(&cpu.edi, &(id_src->val),id_src->width);
+  cpu.edi += id_src->width;
+  print_asm("stos");
 }
 
 make_EHelper(in) {

@@ -217,13 +217,20 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           i+=form.step;
           break;
         }
+        case 'p': {
+          int num = va_arg(ap,int);//在函数内部转为ｕｉｎｔ
+          int nindex = strlen(out);
+          uori2a(num,nindex,out,&index,form,2);
+          i+=form.step;
+          break;
+        }
         case 'c':{
           int num = va_arg(ap,int);
           char cw = (char)num;
           if(form.width > 1)
           {
             int subres = form.width - 1;
-            if(form.addzero)
+            if(form.addzero)  
               for(int j = 0; j < subres; j++)
                 tempstr[j] = '0';
             else
@@ -286,14 +293,14 @@ int snprintf(char *out, size_t n, const char *fmt, ...) {
   if(out == NULL)
     return -1;
   va_list ap;
-  char buf[65535];
   va_start(ap,fmt);
-  vsprintf(buf,fmt,ap);
-  if(strlen(buf) > n)
-    buf[n] = '\0';
-  strcpy(out,buf);
+  int cnt = vsprintf(out,fmt,ap);
+  if(cnt >= n) {
+    out[n-1] = '\0';
+    cnt = n-1;
+  }
   va_end(ap);
-  return n;
+  return cnt;
 }
 
 #endif

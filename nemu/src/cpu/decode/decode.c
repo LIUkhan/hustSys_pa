@@ -115,7 +115,9 @@ static inline make_DopHelper(O) {
   snprintf(op->str, OP_STR_SIZE, "0x%x", op->addr);
 #endif
 }
-
+make_DHelper(astos) {
+  decode_op_a(eip, id_src, true);
+}
 /* Eb <- Gb  G:The reg field of the modR/M byte selects a general register
  * Ev <- Gv  E:A modR/M byte follows the opcode and specifies the operand,E就是要算复杂偏移的情况
  */
@@ -339,3 +341,4 @@ void operand_write(Operand *op, rtlreg_t* src) {
   else if (op->type == OP_TYPE_MEM) { rtl_sm(&op->addr, src, op->width); }
   else { assert(0); }
 }
+

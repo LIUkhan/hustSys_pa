@@ -1,8 +1,10 @@
 #include <am.h>
 #include <x86.h>
+#include"klib.h"
 
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
 
+void vecsys();
 void vectrap();
 void vecnull();
 
@@ -10,10 +12,33 @@ _Context* irq_handle(_Context *tf) {
   _Context *next = tf;
   if (user_handler) {
     _Event ev = {0};
-    switch (tf->irq) {
-      default: ev.event = _EVENT_ERROR; break;
+    switch (tf->irq) {//printf("0x%x\n",tf->irq);
+      case 0x80: {
+        ev.event = _EVENT_SYSCALL;
+        break;
+      }
+      case 0x81: {
+        ev.event = _EVENT_YIELD; 
+        break;
+      }
+      default: {
+        ev.event = _EVENT_ERROR; 
+        break;
+      }
     }
-
+    // printf("esi:0x%08x\n",tf->esi);
+    // printf("edi:0x%08x\n",tf->edi);
+    // printf("ebp:0x%08x\n",tf->ebp);
+    // printf("esp:0x%08x\n",tf->esp);
+    // printf("ebx:0x%08x\n",tf->ebx);
+    // printf("edx:0x%08x\n",tf->edx);
+    // printf("ecx:0x%08x\n",tf->ecx);
+    // printf("eax:0x%08x\n",tf->eax);
+    // printf("irq:0x%x\n",tf->irq);
+    // printf("err:0x%x\n",tf->err);
+    // printf("eip:0x%08x\n",tf->eip);
+    // printf("cs:0x%08x\n",tf->cs);
+    // printf("eflags:0x%08x\n",tf->eflags);
     next = user_handler(ev, tf);
     if (next == NULL) {
       next = tf;
@@ -32,6 +57,7 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
   }
 
   // -------------------- system call --------------------------
+  idt[0x80] = GATE(STS_TG32, KSEL(SEG_KCODE), vecsys, DPL_KERN);
   idt[0x81] = GATE(STS_TG32, KSEL(SEG_KCODE), vectrap, DPL_KERN);
 
   set_idt(idt, sizeof(idt));

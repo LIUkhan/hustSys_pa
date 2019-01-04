@@ -93,6 +93,7 @@ bool checkWP()
     if(temp->value != val)
     {
       printf("WatchPoint %u has changed!\n",temp->NO);
+      printf("old value:0x%08x new value:0x%08x\n",temp->value,val);
       change = true;
       temp->oldvalue = temp->value;
       temp->value = val;
