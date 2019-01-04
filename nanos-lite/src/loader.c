@@ -10,7 +10,7 @@ static uintptr_t loader(PCB *pcb, const char *filename) {
   assert(filename != NULL);
   int fd = fs_open(filename, 0, 0);
   int size = fs_filesz(fd);
-  Log("load program %s {fd=%d} with size=%d", filename, fd, size);
+  Log("load program %s fd=%d size=%d", filename, fd, size);
   fs_read(fd, (void *)DEFAULT_ENTRY, size);
   fs_close(fd);
   return DEFAULT_ENTRY;
