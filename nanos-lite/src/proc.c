@@ -3,11 +3,12 @@
 #define MAX_NR_PROC 4
 
 static PCB pcb[MAX_NR_PROC] __attribute__((used));
-static PCB pcb_boot;
+// static PCB pcb_boot;
 PCB *current;
 extern void context_kload(PCB *, void *);
 void switch_boot_pcb() {
-  current = &pcb_boot;
+  // current = &pcb_boot;
+  current = &pcb[0];
 }
 
 void hello_fun(void *arg) {
