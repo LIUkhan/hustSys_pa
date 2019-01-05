@@ -44,7 +44,6 @@ _Context* irq_handle(_Context *tf) {
       next = tf;
     }
   }
-
   return next;
 }
 
@@ -67,9 +66,18 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
 
   return 0;
 }
-
+// typedef struct _Area {
+//   void *start, *end;
+// } _Area; 
 _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
-  return NULL;
+  void **base = (void **)stack.end;
+  _Context * nc = (_Context *)base;
+  memset(nc, 0, sizeof(_Context));
+  nc->eip = (uint32_t)entry;
+  nc->cs = 0x8;
+//uintptr_t *tf = (uintptr_t *)stack.start;
+//*tf = (uintptr_t)ctx;  
+  return nc;
 }
 
 void _yield() {
