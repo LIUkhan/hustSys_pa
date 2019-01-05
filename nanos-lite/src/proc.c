@@ -34,7 +34,7 @@ _Context* schedule(_Context *prev) {
 }
 
 
-void execve(const char * filename,char * const argv[ ],char * const envp[ ])
+void my_execve(const char * filename,char * const argv[ ],char * const envp[ ])
 {
   naive_uload(NULL, filename);
 }

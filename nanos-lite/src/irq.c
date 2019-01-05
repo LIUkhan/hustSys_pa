@@ -6,13 +6,11 @@ static _Context* do_event(_Event e, _Context* c) {
   switch (e.event) {
     case 5:{
       printf("_event_yield\n");
-      c = schedule(c);
-      return c;
+      return schedule(c);
     }
     case 6:{
       printf("_event_syscall\n");
-      do_syscall(c);
-      break;
+      return do_syscall(c);
     }
     default: panic("Unhandled event ID = %d", e.event);
   }

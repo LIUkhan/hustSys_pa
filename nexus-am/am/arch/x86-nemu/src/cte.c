@@ -43,7 +43,7 @@ _Context* irq_handle(_Context *tf) {
     if (next == NULL) {
       next = tf;
     }
-    printf("%p\n",&(next->eip));
+    printf("%p %p\n",next,&(next->eip));
     // _switch(next);
   }
   return next;
