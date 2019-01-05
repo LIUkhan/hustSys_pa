@@ -21,6 +21,10 @@ _Context* irq_handle(_Context *tf) {
         ev.event = _EVENT_YIELD; 
         break;
       }
+      case 0:{
+        printf("hhh");
+        break;
+      }
       default: {
         ev.event = _EVENT_ERROR; 
         break;
