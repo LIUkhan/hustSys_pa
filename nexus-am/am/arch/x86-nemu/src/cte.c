@@ -40,10 +40,11 @@ _Context* irq_handle(_Context *tf) {
     // printf("cs:0x%08x\n",tf->cs);
     // printf("eflags:0x%08x\n",tf->eflags);
     next = user_handler(ev, tf);
-    // if (next == NULL) {
-    //   next = tf;
-    // }
+    if (next == NULL) {
+      next = tf;
+    }
     printf("%d\n",next->cs);
+    printf("0x%x\n",next->eip);
   }
   return next;
 }
@@ -75,6 +76,7 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   _Context * nc = (_Context *)base+1;
   memset(nc, 0, sizeof(_Context));
   nc->eip = (uint32_t)entry;
+  printf("0x%x\n",nc->eip);
   nc->cs = 0x8;
   uintptr_t *tf = (uintptr_t *)stack.start;
   *tf = (uintptr_t)nc;  
