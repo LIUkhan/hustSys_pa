@@ -71,7 +71,7 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
 // } _Area; 
 _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   void **base = (void **)stack.end;
-  _Context * nc = (_Context *)base;
+  _Context * nc = (_Context *)base - 1;
   memset(nc, 0, sizeof(_Context));
   nc->eip = (uint32_t)entry;
   nc->cs = 0x8;
