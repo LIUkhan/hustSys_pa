@@ -14,18 +14,17 @@ _Context* irq_handle(_Context *tf) {
     _Event ev = {0};
     switch (tf->irq) {//printf("0x%x\n",tf->irq);
       case 0x80: {
+        printf("syscall80\n");
         ev.event = _EVENT_SYSCALL;
         break;
       }
       case 0x81: {
+        printf("yield81\n");
         ev.event = _EVENT_YIELD; 
         break;
       }
-      case 0:{
-        printf("hhh");
-        break;
-      }
       default: {
+        printf("err\n");
         ev.event = _EVENT_ERROR; 
         break;
       }
