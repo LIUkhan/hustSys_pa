@@ -6,7 +6,7 @@ static _Context* do_event(_Event e, _Context* c) {
   switch (e.event) {
     case 5:{
       printf("_event_yield\n");
-      // c = schedule(c);
+      c = schedule(c);
       break;
     }
     case 6:{

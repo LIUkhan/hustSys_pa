@@ -79,8 +79,8 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   nc->eip = (uint32_t)entry;
   printf("%p\n",&(nc->eip));
   nc->cs = 0x8;
-  uintptr_t *tf = (uintptr_t *)stack.start;
-  *tf = (uintptr_t)nc;  
+  // uintptr_t *tf = (uintptr_t *)stack.start;
+  // *tf = (uintptr_t)nc;  
   return nc;
 }
 
