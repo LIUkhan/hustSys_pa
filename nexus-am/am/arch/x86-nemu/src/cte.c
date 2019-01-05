@@ -44,7 +44,7 @@ _Context* irq_handle(_Context *tf) {
       next = tf;
     }
     printf("%p\n",&(next->eip));
-    _switch(next);
+    // _switch(next);
   }
   return next;
 }
