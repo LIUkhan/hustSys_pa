@@ -46,6 +46,7 @@ _Context* irq_handle(_Context *tf) {
     if (next == NULL) {
       next = tf;
     }
+    printf("0x%x\n",next->eip);
     printf("%p %p\n",next,&(next->eip));
     printf("%x\n",next->irq);
     // _switch(next);
@@ -83,6 +84,7 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   memset(nc, 0, sizeof(_Context));
   nc->eip = (uint32_t)entry;
   printf("%p\n",&(nc->eip));
+  printf("0x%x\n",nc->eip);
   printf("%x\n",nc->irq);
   nc->cs = 0x8;
   uintptr_t *tf = (uintptr_t *)stack.start;
