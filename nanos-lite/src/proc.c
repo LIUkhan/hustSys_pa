@@ -25,7 +25,6 @@ void init_proc() {
   // naive_uload(NULL, "/bin/init");
   context_kload(&pcb[0], (void *)hello_fun);
   switch_boot_pcb();
-  printf("1111\n");
 }
 
 _Context* schedule(_Context *prev) {
