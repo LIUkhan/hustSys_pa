@@ -7,7 +7,7 @@ static _Context* do_event(_Event e, _Context* c) {
     case 5:{
       printf("_event_yield\n");
       c = schedule(c);
-      break;
+      return c;
     }
     case 6:{
       printf("_event_syscall\n");
@@ -16,7 +16,7 @@ static _Context* do_event(_Event e, _Context* c) {
     }
     default: panic("Unhandled event ID = %d", e.event);
   }
-  return c;
+  return NULL;
 }
 
 void init_irq(void) {
