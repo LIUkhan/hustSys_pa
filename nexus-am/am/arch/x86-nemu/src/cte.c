@@ -3,7 +3,7 @@
 #include"klib.h"
 
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
-
+extern void _switch(_Context*);
 void vecsys();
 void vectrap();
 void vecnull();
@@ -44,6 +44,7 @@ _Context* irq_handle(_Context *tf) {
       next = tf;
     }
     printf("%p\n",&(next->eip));
+    _switch(next);
   }
   return next;
 }
@@ -79,8 +80,8 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   nc->eip = (uint32_t)entry;
   printf("%p\n",&(nc->eip));
   nc->cs = 0x8;
-  // uintptr_t *tf = (uintptr_t *)stack.start;
-  // *tf = (uintptr_t)nc;  
+  uintptr_t *tf = (uintptr_t *)stack.start;
+  *tf = (uintptr_t)nc;  
   return nc;
 }
 
