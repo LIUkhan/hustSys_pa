@@ -40,9 +40,9 @@ _Context* irq_handle(_Context *tf) {
     // printf("cs:0x%08x\n",tf->cs);
     // printf("eflags:0x%08x\n",tf->eflags);
     next = user_handler(ev, tf);
-    if (next == NULL) {
-      next = tf;
-    }
+    // if (next == NULL) {
+    //   next = tf;
+    // }
     printf("%d\n",next->cs);
   }
   return next;
