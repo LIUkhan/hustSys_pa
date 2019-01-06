@@ -77,19 +77,30 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
 //   void *start, *end;
 // } _Area; 
 _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
-  printf("%p %p\n",stack.start,stack.end);
-  void *base = stack.end;
-  _Context * nc = (_Context *)base-1;
-  printf("%p\n",nc);
-  memset(nc, 0, sizeof(_Context));
-  nc->eip = (uint32_t)entry;
-  printf("%p\n",&(nc->eip));
-  printf("0x%x\n",nc->eip);
-  printf("%x\n",nc->irq);
-  nc->cs = 0x8;
-  uintptr_t *tf = (uintptr_t *)stack.start;
-  *tf = (uintptr_t)nc;  
-  return nc;
+  // printf("%p %p\n",stack.start,stack.end);
+  // void *base = stack.end;
+  // _Context * nc = (_Context *)base-1;
+  // printf("%p\n",nc);
+  // memset(nc, 0, sizeof(_Context));
+  // nc->eip = (uint32_t)entry;
+  // printf("%p\n",&(nc->eip));
+  // printf("0x%x\n",nc->eip);
+  // printf("%x\n",nc->irq);
+  // nc->cs = 0x8;
+  // uintptr_t *tf = (uintptr_t *)stack.start;
+  // *tf = (uintptr_t)nc;  
+  // return nc;
+    void **args = (void **)stack.end;
+    args[0] = arg;
+    _Context *ctx = (_Context *)args - 1;
+    memset(ctx, 0, sizeof(_Context));
+    ctx->eip = (size_t)entry;
+    // ctx->eflags = MASK_IF;
+    ctx->cs = 0x8;
+    // TODO WITH ARG
+    uintptr_t *tf = (uintptr_t *)stack.start;
+    *tf = (uintptr_t)ctx;
+    return ctx;
 }
 
 void _yield() {
