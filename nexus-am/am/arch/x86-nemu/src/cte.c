@@ -14,17 +14,14 @@ _Context* irq_handle(_Context *tf) {
     _Event ev = {0};
     switch (tf->irq) {//printf("0x%x\n",tf->irq);
       case 0x80: {
-        printf("syscall80\n");
         ev.event = _EVENT_SYSCALL;
         break;
       }
       case 0x81: {
-        printf("yield81\n");
         ev.event = _EVENT_YIELD; 
         break;
       }
       default: {
-        printf("err\n");
         ev.event = _EVENT_ERROR; 
         break;
       }
@@ -79,12 +76,12 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   printf("%p %p\n",stack.start,stack.end);
   void *base = stack.end;
   _Context * nc = (_Context *)base-1;
-  printf("%p\n",nc);
+  // printf("%p\n",nc);
   memset(nc, 0, sizeof(_Context));
   nc->eip = (uint32_t)entry;
-  printf("%p\n",&(nc->eip));
-  printf("0x%x\n",nc->eip);
-  printf("%x\n",nc->irq);
+  // printf("%p\n",&(nc->eip));
+  // printf("0x%x\n",nc->eip);
+  // printf("%x\n",nc->irq);
   nc->cs = 0x8;
   uintptr_t *tf = (uintptr_t *)stack.start;
   *tf = (uintptr_t)nc;  
