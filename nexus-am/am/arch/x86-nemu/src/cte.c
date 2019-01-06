@@ -81,7 +81,7 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   _Context * nc = (_Context *)base-1;
   printf("%p\n",nc);
   memset(nc, 0, sizeof(_Context));
-  nc->eip = (uint32_t)*entry;
+  nc->eip = (uint32_t)entry;
   printf("%p\n",&(nc->eip));
   printf("0x%x\n",nc->eip);
   printf("%x\n",nc->irq);
