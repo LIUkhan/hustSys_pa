@@ -15,3 +15,6 @@ The following subprojects/components are included. Some of them are not fully im
 * [Nexus-am](https://github.com/NJU-ProjectN/nexus-am)
 * [Nanos-lite](https://github.com/NJU-ProjectN/nanos-lite)
 * [Navy-apps](https://github.com/NJU-ProjectN/navy-apps)
+
+clone后需要下载仙剑奇侠传数据文件放在share/games中
+并且需要重新make ARCH=？？？ update
